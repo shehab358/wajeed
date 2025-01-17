@@ -40,204 +40,206 @@ class _HomeTabState extends State<HomeTab> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Insets.s16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Delevirng to',
-                            style: getRegularStyle(
-                              color: ColorManager.grey,
-                            ).copyWith(
-                              fontSize: FontSize.s16,
-                            ),
-                          ),
-                        ],
-                      ),
-                      GestureDetector(
-                        child: Row(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
                             Text(
-                              'KAFD Al Aqiq, Riyadh',
-                              style: getMediumStyle(
-                                color: ColorManager.black,
+                              'Delevirng to',
+                              style: getRegularStyle(
+                                color: ColorManager.grey,
                               ).copyWith(
-                                fontSize: FontSize.s18,
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.arrow_drop_down_outlined),
-                              color: ColorManager.black,
-                              onPressed: () => _showDeliveryLocationBottomSheet(
-                                context,
+                                fontSize: FontSize.s16,
                               ),
                             ),
                           ],
                         ),
+                        GestureDetector(
+                          child: Row(
+                            children: [
+                              Text(
+                                'KAFD Al Aqiq, Riyadh',
+                                style: getMediumStyle(
+                                  color: ColorManager.black,
+                                ).copyWith(
+                                  fontSize: FontSize.s18,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.arrow_drop_down_outlined),
+                                color: ColorManager.black,
+                                onPressed: () => _showDeliveryLocationBottomSheet(
+                                  context,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    CircleAvatar(
+                      backgroundColor: ColorManager.primary,
+                      foregroundColor: ColorManager.black,
+                      child: Text(
+                        'H',
+                        style: getBoldStyle(
+                          color: ColorManager.black,
+                        ).copyWith(
+                          fontSize: FontSize.s18,
+                        ),
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16.h,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        hint: 'Search',
+                        prefixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                    Container(
+                      height: 50.h,
+                      width: 50.w,
+                      margin: EdgeInsets.only(left: Insets.s12),
+                      decoration: BoxDecoration(
+                        color: ColorManager.grey.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.filter_list,
+                        ),
+                        onPressed: () => _showFilter(context),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 15.h,
+                ),
+                SizedBox(
+                  height: 150.h,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 100.h,
+                            width: 100.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: ColorManager.yellow,
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  ImageAssets.food,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 6.h,
+                          ),
+                          Text(
+                            'Food',
+                            style: getMediumStyle(
+                              color: ColorManager.black,
+                            ).copyWith(
+                              fontSize: FontSize.s18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 6,
                   ),
-                  CircleAvatar(
-                    backgroundColor: ColorManager.primary,
-                    foregroundColor: ColorManager.black,
-                    child: Text(
-                      'H',
+                ),
+                SizedBox(
+                  height: 15.h,
+                ),
+                CustomSlider(
+                  imagesPaths: _sliderImages,
+                  currentIndex: _currentIndex,
+                  timer: _timer,
+                ),
+                SizedBox(
+                  height: 15.w,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Nearby stores',
                       style: getBoldStyle(
                         color: ColorManager.black,
                       ).copyWith(
-                        fontSize: FontSize.s18,
+                        fontSize: FontSize.s20,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16.h,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      hint: 'Search',
-                      prefixIcon: const Icon(Icons.search),
-                    ),
-                  ),
-                  Container(
-                    height: 50.h,
-                    width: 50.w,
-                    margin: EdgeInsets.only(left: Insets.s12),
-                    decoration: BoxDecoration(
-                      color: ColorManager.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.filter_list,
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'View all',
+                        style: getRegularStyle(
+                          color: ColorManager.starRate,
+                          fontSize: FontSize.s16,
+                        ),
                       ),
-                      onPressed: () => _showFilter(context),
                     ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 15.h,
-              ),
-              SizedBox(
-                height: 150.h,
-                child: ListView.builder(
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100.h,
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: ColorManager.yellow,
-                            image: DecorationImage(
-                              image: AssetImage(
-                                ImageAssets.food,
+                  ],
+                ),
+                SizedBox(
+                  height: 150.h,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 100.h,
+                            width: 100.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  ImageAssets.mcdonalds,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Food',
-                          style: getMediumStyle(
-                            color: ColorManager.black,
-                          ).copyWith(
-                            fontSize: FontSize.s18,
+                          SizedBox(
+                            height: 6.h,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 6,
-                ),
-              ),
-              SizedBox(
-                height: 15.h,
-              ),
-              CustomSlider(
-                imagesPaths: _sliderImages,
-                currentIndex: _currentIndex,
-                timer: _timer,
-              ),
-              SizedBox(
-                height: 15.w,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Nearby stores',
-                    style: getBoldStyle(
-                      color: ColorManager.black,
-                    ).copyWith(
-                      fontSize: FontSize.s20,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'View all',
-                      style: getRegularStyle(
-                        color: ColorManager.starRate,
-                        fontSize: FontSize.s16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 150.h,
-                child: ListView.builder(
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100.h,
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            image: DecorationImage(
-                              image: AssetImage(
-                                ImageAssets.mcdonalds,
-                              ),
+                          Text(
+                            'Mcdonalds',
+                            style: getMediumStyle(
+                              color: ColorManager.black,
+                            ).copyWith(
+                              fontSize: FontSize.s18,
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Mcdonalds',
-                          style: getMediumStyle(
-                            color: ColorManager.black,
-                          ).copyWith(
-                            fontSize: FontSize.s18,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 6,
                   ),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 6,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
