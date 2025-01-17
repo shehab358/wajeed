@@ -97,9 +97,6 @@ class Resturant extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(
-              flex: 1,
-            ),
             TextButton(
               onPressed: () {},
               child: Text(
