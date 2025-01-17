@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wajeed/core/routes/routes.dart';
+import 'package:wajeed/features/home/presentation/screens/walkthrough.dart';
 import 'package:wajeed/features/home/presentation/screens/home_screen.dart';
 
 class RouteGenerator {
@@ -8,6 +9,10 @@ class RouteGenerator {
       case Routes.home:
         return MaterialPageRoute(
           builder: (_) => const HomeScreen(),
+        );
+      case Routes.walkthorough:
+        return MaterialPageRoute(
+          builder: (_) => const Walkthrough(),
         );
 
       default:
