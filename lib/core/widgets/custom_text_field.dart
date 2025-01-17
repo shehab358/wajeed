@@ -81,7 +81,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           decoration: BoxDecoration(
             color: isEnabled
                 ? widget.backgroundColor ??
-                    ColorManager.darkGrey.withOpacity(.15)
+                    ColorManager.white
                 : ColorManager.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(Sizes.s8),
             border: Border.all(

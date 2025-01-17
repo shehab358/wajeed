@@ -9,6 +9,8 @@ class ImageAssets {
   static const String firstWalkthrough = '$_imagePath/walkthrough1.jpg';
   static const String secondWalkthrough = '$_imagePath/walkthough2.png';
   static const String thirdWalkthrough = '$_imagePath/walkthrough3.jpg';
+  static const String logo = '$_imagePath/logo.png';
+  static const String password= '$_imagePath/password.jpg';
 
 }
 
