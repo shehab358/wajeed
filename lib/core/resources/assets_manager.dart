@@ -6,6 +6,10 @@ class ImageAssets {
   static const String offer3 = '$_imagePath/offer3.webp';
   static const String mcdonalds = '$_imagePath/Mcdonalds.png';
   static const String meal = '$_imagePath/meal.jpg';
+  static const String firstWalkthrough = '$_imagePath/walkthrough1.jpg';
+  static const String secondWalkthrough = '$_imagePath/walkthough2.png';
+  static const String thirdWalkthrough = '$_imagePath/walkthrough3.jpg';
+
 }
 
 class IconsAssets {
