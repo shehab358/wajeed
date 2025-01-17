@@ -17,7 +17,7 @@ class SalesTab extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Insets.s18),
+          padding: const EdgeInsets.symmetric(horizontal: Insets.s16),
           child: Column(
             children: [
               Row(

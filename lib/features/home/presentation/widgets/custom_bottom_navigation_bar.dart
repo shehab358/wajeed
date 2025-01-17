@@ -38,7 +38,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        height: 65.h,
+        height: 70.h,
         margin: EdgeInsets.all(
           Insets.s24,
         ),
