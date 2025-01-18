@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/routes/routes.dart';
+import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/utils/validator.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,7 +24,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String countryCode = "+966";
+  String countryCode = "+20";
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -194,13 +200,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 20.h,
                       ),
-                      CustomElevatedButton(
-                        label: 'Sign Up',
-                        textStyle: getBoldStyle(
-                            color: ColorManager.black, fontSize: FontSize.s20),
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {}
+                      BlocListener<AuthCubit, AuthState>(
+                        listener: (context, state) async {
+                          if (state is RegisterLoading) {
+                            UIUtils.showLoading(context);
+                          } else if (state is RegisterSuccess) {
+                            UIUtils.hideLoading(context);
+
+                            final bool isWalkedthrough = serviceLocator
+                                    .get<SharedPreferences>()
+                                    .getBool('isWalkedthrough') ??
+                                false;
+
+                            if (isWalkedthrough) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.home,
+                              );
+                            } else {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.walkthorough,
+                              );
+                            }
+
+                            final sharedPref =
+                                serviceLocator.get<SharedPreferences>();
+                            await sharedPref.setBool('isLogged', true);
+                          } else if (state is RegisterError) {
+                            UIUtils.hideLoading(context);
+
+                            UIUtils.showMessage(state.message);
+                          }
                         },
+                        child: CustomElevatedButton(
+                          label: 'Sign Up',
+                          textStyle: getBoldStyle(
+                              color: ColorManager.black,
+                              fontSize: FontSize.s20),
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              final phone =
+                                  '$countryCode${_phoneController.text}';
+                              context.read<AuthCubit>().register(
+                                    phone,
+                                    _nameController.text,
+                                    _passwordController.text,
+                                  );
+                            }
+                          },
+                        ),
                       ),
                       Spacer(
                         flex: 2,
@@ -297,9 +346,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-
-
-// Privacy Policy
-
-// Lorem ipsum dolor sit amet consectetur.
-// Condimentum penatibus rhoncus ut sem orci mattis augue. Viverra varius aliquet nulla cras quis et purus mattis. Vulputate imperdiet tincidunt turpis purus nascetur vestibulum odio lectus interdum. Sit lorem lacus massa arcu cursus tristique purus risus. Non diam pretium vulputate proin cursus sagittis tellus. Imperdiet turpis egestas facilisi sit semper arcu lobortis. Amet lorem sit egestas sed. Nunc bibendum venenatis senectus integer in tortor. Eu nec massa a vivamus pellentesque. Curabitur quam tincidunt laoreet ante felis ut malesuada sapien. Amet quisque velit posuere enim duis aliquam a euismod nunc. Commodo donec vitae pellentesque posuere. Proin nisl blandit odio sit amet. Fringilla pellentesque senectus euismod enim tortor massa massa. At neque enim nisl sed. Consequat sit et id proin in cursus. Sapien eleifend non tristique elementum semper ut magna aliquet enim. Facilisis rhoncus massa a nunc adipiscing. Odio sed faucibus cras dignissim congue adipiscing nulla. Vitae porttitor viverra sem enim ac viverra at ut. Proin leo pharetra et pellentesque porttitor in eleifend in. Diam aliquam vitae ornare massa. Consectetur urna molestie lectus tristique purus sollicitudin mus ut tristique. Nulla elit rhoncus malesuada libero interdum proin.

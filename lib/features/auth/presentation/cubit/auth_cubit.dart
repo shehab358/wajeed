@@ -1,0 +1,68 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:wajeed/features/auth/domain/use_case.dart/login.dart';
+import 'package:wajeed/features/auth/domain/use_case.dart/logout.dart';
+import 'package:wajeed/features/auth/domain/use_case.dart/register.dart';
+import 'package:wajeed/features/auth/domain/use_case.dart/reset_password.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
+
+@singleton
+class AuthCubit extends Cubit<AuthState> {
+  AuthCubit(this._register, this._login, this._logout, this._resetPassword)
+      : super(AuthInitial());
+
+  final Register _register;
+  final Login _login;
+  final Logout _logout;
+  final ResetPassword _resetPassword;
+
+  Future<void> register(String email, String name, String password) async {
+    emit(RegisterLoading());
+    final result = await _register(email, name, password);
+    result.fold(
+      (failure) => emit(RegisterError(failure.message)),
+      (user) {
+        emit(RegisterSuccess());
+      },
+    );
+  }
+
+  Future<void> login(String email, String password) async {
+    emit(LoginLoading());
+    final result = await _login(email, password);
+    result.fold(
+      (failure) => emit(LoginError(failure.message)),
+      (user) {
+        emit(LoginSuccess());
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    emit(LogoutLoading());
+    final result = await _logout();
+    result.fold(
+      (failure) => emit(LogoutError(failure.message)),
+      (_) {
+        emit(LogoutSuccess());
+      },
+    );
+  }
+
+  Future<void> resetPassword(String email) async {
+    emit(ResetPasswordLoading());
+    final result = await _resetPassword(email);
+    result.fold(
+      (failure) => emit(
+        ResetPasswordError(
+          failure.message,
+        ),
+      ),
+      (_) {
+        emit(
+          ResetPasswordSuccess(),
+        );
+      },
+    );
+  }
+}

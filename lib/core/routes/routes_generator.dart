@@ -13,27 +13,34 @@ class RouteGenerator {
       case Routes.home:
         return MaterialPageRoute(
           builder: (_) => const HomeScreen(),
+          settings: settings,
         );
       case Routes.walkthorough:
         return MaterialPageRoute(
           builder: (_) => const Walkthrough(),
+          settings: settings,
         );
       case Routes.login:
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
+          settings: settings,
         );
       case Routes.register:
         return MaterialPageRoute(
           builder: (_) => const RegisterScreen(),
+          settings: settings,
         );
       case Routes.privacy:
         return MaterialPageRoute(
           builder: (_) => PrivacyPolicyScreen(),
+          settings: settings,
         );
       case Routes.forgetPassword:
         return MaterialPageRoute(
           builder: (_) => ForgetPassword(),
+          settings: settings,
         );
+
 
       default:
         return _undefinedRoute();

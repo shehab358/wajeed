@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/routes/routes.dart';
+import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/utils/validator.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,7 +24,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String countryCode = "+966";
+  String countryCode = "+20";
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -149,7 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, Routes.forgetPassword);
+                          Navigator.pushNamed(
+                            context,
+                            Routes.forgetPassword,
+                          );
                         },
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -164,13 +173,53 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 20.h,
                       ),
-                      CustomElevatedButton(
-                        label: 'Login',
-                        textStyle: getBoldStyle(
-                            color: ColorManager.black, fontSize: FontSize.s20),
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {}
+                      BlocListener<AuthCubit, AuthState>(
+                        listener: (context, state) async {
+                          if (state is LoginLoading) {
+                            UIUtils.showLoading(context);
+                          } else if (state is LoginSuccess) {
+                            UIUtils.hideLoading(context);
+                            final bool isWalkedthrough = serviceLocator
+                                    .get<SharedPreferences>()
+                                    .getBool('isWalkedthrough') ??
+                                false;
+
+                            if (isWalkedthrough) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.home,
+                              );
+                            } else {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.walkthorough,
+                              );
+                            }
+                            final sharedPref =
+                                serviceLocator.get<SharedPreferences>();
+                            await sharedPref.setBool('isLogged', true);
+                          } else if (state is LoginError) {
+                            UIUtils.hideLoading(context);
+
+                            UIUtils.showMessage(state.message);
+                          }
                         },
+                        child: CustomElevatedButton(
+                          label: 'Login',
+                          textStyle: getBoldStyle(
+                              color: ColorManager.black,
+                              fontSize: FontSize.s20),
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              final phone =
+                                  '$countryCode${_phoneController.text}';
+                              context.read<AuthCubit>().login(
+                                    phone,
+                                    _passwordController.text,
+                                  );
+                            }
+                          },
+                        ),
                       ),
                       Spacer(
                         flex: 2,
@@ -188,7 +237,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             onPressed: () {
                               Navigator.pushReplacementNamed(
-                                  context, Routes.register);
+                                context,
+                                Routes.register,
+                              );
                             },
                             child: Text(
                               'Sign Up',

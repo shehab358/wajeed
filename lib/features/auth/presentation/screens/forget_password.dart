@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
+import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/utils/validator.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -17,9 +21,23 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  String countryCode = "+966";
+  String countryCode = "+20";
   final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(() {
+      setState(() {});
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final phone = ModalRoute.of(context)?.settings.arguments as String?;
+      if (phone != null) {
+        _phoneController.text = phone;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,15 +161,34 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       SizedBox(
                         height: 20.h,
                       ),
-                      CustomElevatedButton(
-                        label: 'Next',
-                        textStyle: getBoldStyle(
-                            color: ColorManager.black, fontSize: FontSize.s20),
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {}
+                      BlocListener<AuthCubit, AuthState>(
+                        listener: (context, state) {
+                          if (state is ResetPasswordLoading) {
+                            UIUtils.showLoading(context);
+                          } else if (state is ResetPasswordError) {
+                            UIUtils.hideLoading(context);
+                            UIUtils.showMessage(state.message);
+                          } else if (state is ResetPasswordSuccess) {
+                            UIUtils.hideLoading(context);
+                            UIUtils.showMessage(
+                              'Check your email to reset your password',
+                            );
+                          }
                         },
+                        child: CustomElevatedButton(
+                          label: 'Next',
+                          textStyle: getBoldStyle(
+                              color: ColorManager.black,
+                              fontSize: FontSize.s20),
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<AuthCubit>().resetPassword(
+                                    '$countryCode${_phoneController.text}',
+                                  );
+                            }
+                          },
+                        ),
                       ),
-
                     ],
                   ),
                 ),
@@ -215,5 +252,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
   }
 }

@@ -6,28 +6,29 @@ import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 
 class CustomTextField extends StatefulWidget {
-  const CustomTextField({
-    this.controller,
-    this.focusNode,
-    this.nextFocus,
-    this.label,
-    this.hint,
-    this.isObscured = false,
-    this.iconData,
-    this.textInputType = TextInputType.text,
-    this.backgroundColor,
-    this.hintTextStyle,
-    this.labelTextStyle,
-    this.cursorColor,
-    this.readOnly = false,
-    this.validation,
-    this.onTap,
-    this.maxLines,
-    this.prefixIcon,
-    this.borderBackgroundColor,
-    this.suffixIcon,
-    this.enabled,
-  });
+  const CustomTextField(
+      {this.controller,
+      this.focusNode,
+      this.nextFocus,
+      this.label,
+      this.hint,
+      this.isObscured = false,
+      this.iconData,
+      this.textInputType = TextInputType.text,
+      this.backgroundColor,
+      this.hintTextStyle,
+      this.labelTextStyle,
+      this.cursorColor,
+      this.readOnly = false,
+      this.validation,
+      this.onTap,
+      this.maxLines,
+      this.maxLength,
+      this.prefixIcon,
+      this.borderBackgroundColor,
+      this.suffixIcon,
+      this.enabled,
+      this.onChanged});
 
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -44,11 +45,13 @@ class CustomTextField extends StatefulWidget {
   final Color? cursorColor;
   final bool readOnly;
   final int? maxLines;
+  final int? maxLength;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool? enabled;
   final String? Function(String?)? validation;
   final void Function()? onTap;
+  final ValueChanged<String>? onChanged;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -80,8 +83,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           margin: EdgeInsets.only(top: Insets.s5.h),
           decoration: BoxDecoration(
             color: isEnabled
-                ? widget.backgroundColor ??
-                    ColorManager.white
+                ? widget.backgroundColor ?? ColorManager.white
                 : ColorManager.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(Sizes.s8),
             border: Border.all(
@@ -92,6 +94,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: TextFormField(
+            maxLength: widget.maxLength,
             enabled: isEnabled,
             maxLines: widget.maxLines ?? 1,
             controller: widget.controller,
@@ -107,6 +110,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ? widget.cursorColor ?? ColorManager.black
                 : ColorManager.grey,
             onTap: widget.onTap,
+            onChanged: widget.onChanged,
             onEditingComplete: () {
               widget.focusNode?.unfocus();
               if (widget.nextFocus != null) {
