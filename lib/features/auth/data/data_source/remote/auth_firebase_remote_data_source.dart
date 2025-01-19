@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
+import 'package:wajeed/core/constants.dart';
 import 'package:wajeed/core/error/exceptions.dart';
 import 'package:wajeed/features/auth/data/data_source/remote/auth_remote_data_source.dart';
 import 'package:wajeed/features/auth/data/models/user_model.dart';
@@ -29,7 +32,8 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> register(String phone, String password, String name) async {
+  Future<UserModel> register(
+      String phone, String password, String name, String role) async {
     try {
       UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -41,11 +45,12 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
         id: credential.user!.uid,
         name: name,
         phone: phone,
-        isAdmin: false,
+        role: role,
       );
 
       CollectionReference<UserModel> usersCollection = getUsersCollection();
       await usersCollection.doc(user.id).set(user);
+      await SharedPrefHelper.saveRole(role);
 
       return user;
     } catch (e) {
@@ -69,7 +74,7 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
     try {
       UserCredential credential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: '$phone@example.com',
+        email: '$phone@wajed.com',
         password: password,
       );
       User? firebaseUser = credential.user;
@@ -80,7 +85,10 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
 
       DocumentSnapshot<UserModel> documentSnapshot =
           await usersCollection.doc(firebaseUser.uid).get();
-      return documentSnapshot.data()!;
+      final user = documentSnapshot.data()!;
+
+      await SharedPrefHelper.saveRole(user.role);
+      return user;
     } catch (e) {
       String? message;
       if (e is FirebaseException) {
@@ -94,6 +102,7 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
           message = 'Login failed. Please try again.';
         }
       }
+      log(e.toString());
       throw RemoteException(message ?? 'An error occured logging in');
     }
   }

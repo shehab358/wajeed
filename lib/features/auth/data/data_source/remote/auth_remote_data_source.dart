@@ -7,6 +7,7 @@ abstract class AuthRemoteDataSource {
     String phone,
     String password,
     String name,
+    String role,
   );
   Future<UserModel> login(String phone, String password);
   Future<void> forgetPassword(String phone);

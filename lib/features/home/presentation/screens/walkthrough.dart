@@ -120,7 +120,7 @@ class _WalkthroughState extends State<Walkthrough> {
                       } else {
                         Navigator.pushReplacementNamed(
                           context,
-                          Routes.register,
+                          Routes.select,
                         );
                         final sharedPref =
                             serviceLocator.get<SharedPreferences>();
@@ -154,7 +154,7 @@ class _WalkthroughState extends State<Walkthrough> {
                 onTap: () async {
                   Navigator.pushReplacementNamed(
                     context,
-                    Routes.register,
+                    Routes.select,
                   );
                   final sharedPref = serviceLocator.get<SharedPreferences>();
                   await sharedPref.setBool(

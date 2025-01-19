@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,248 +47,289 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final role =
+        serviceLocator.get<SharedPreferences>().getString(SharedPrefKeys.role);
+    log('User role: $role');
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorManager.white,
-        body: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Image.asset(
-                ImageAssets.logo,
-                height: 200.h,
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
               ),
-              Spacer(
-                flex: 1,
-              ),
-              Container(
-                height: 580.h,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: ColorManager.black,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.r),
-                    topRight: Radius.circular(30.r),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Insets.s20.w),
+              child: IntrinsicHeight(
+                child: Form(
+                  key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Spacer(
-                        flex: 5,
-                      ),
-                      Text(
-                        'Full Name',
-                        style: getRegularStyle(
-                          color: ColorManager.white,
-                        ).copyWith(
-                          fontSize: FontSize.s17,
-                        ),
-                      ),
-                      CustomTextField(
-                        validation: Validator.validateFullName,
-                        textInputType: TextInputType.text,
-                        controller: _nameController,
-                      ),
-                      SizedBox(
-                        height: 35.h,
-                      ),
-                      Text(
-                        'phone number',
-                        style:
-                            getRegularStyle(color: ColorManager.white).copyWith(
-                          fontSize: FontSize.s17,
-                        ),
-                      ),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () async {
-                              String? newCode = await showCountryCodePicker(
-                                  context, countryCode);
-                              if (newCode != null) {
-                                setState(() {
-                                  countryCode = newCode;
-                                });
-                              }
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(context, Routes.select);
                             },
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 5.h,
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              color: ColorManager.black,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 50.w,
+                          ),
+                          Image.asset(
+                            ImageAssets.logo,
+                            height: 200.h,
+                          ),
+                        ],
+                      ),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      Container(
+                        height: 580.h,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: ColorManager.black,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.r),
+                            topRight: Radius.circular(30.r),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: Insets.s20.w),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Spacer(
+                                flex: 5,
+                              ),
+                              Text(
+                                'Full Name',
+                                style: getRegularStyle(
+                                  color: ColorManager.white,
+                                ).copyWith(
+                                  fontSize: FontSize.s17,
                                 ),
-                                Container(
-                                  height: 50.h,
-                                  width: 65.w,
-                                  decoration: BoxDecoration(
-                                    color: ColorManager.white,
-                                    borderRadius:
-                                        BorderRadius.circular(Sizes.s8),
+                              ),
+                              CustomTextField(
+                                validation: Validator.validateFullName,
+                                textInputType: TextInputType.text,
+                                controller: _nameController,
+                              ),
+                              SizedBox(
+                                height: 35.h,
+                              ),
+                              Text(
+                                'phone number',
+                                style: getRegularStyle(color: ColorManager.white)
+                                    .copyWith(
+                                  fontSize: FontSize.s17,
+                                ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      String? newCode = await showCountryCodePicker(
+                                          context, countryCode);
+                                      if (newCode != null) {
+                                        setState(() {
+                                          countryCode = newCode;
+                                        });
+                                      }
+                                    },
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                        Container(
+                                          height: 50.h,
+                                          width: 65.w,
+                                          decoration: BoxDecoration(
+                                            color: ColorManager.white,
+                                            borderRadius:
+                                                BorderRadius.circular(Sizes.s8),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              countryCode,
+                                              style: getSemiBoldStyle(
+                                                color: ColorManager.black,
+                                                fontSize: FontSize.s17,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Center(
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Expanded(
+                                    child: CustomTextField(
+                                      textInputType: TextInputType.phone,
+                                      validation: Validator.validatePhoneNumber,
+                                      controller: _phoneController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 35.h,
+                              ),
+                              Text(
+                                'password',
+                                style: getRegularStyle(color: ColorManager.white)
+                                    .copyWith(
+                                  fontSize: FontSize.s17,
+                                ),
+                              ),
+                              CustomTextField(
+                                validation: Validator.validatePassword,
+                                isObscured: true,
+                                textInputType: TextInputType.text,
+                                controller: _passwordController,
+                              ),
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'By signing up, you agree to our',
+                                    style: getRegularStyle(
+                                      color: ColorManager.grey,
+                                      fontSize: FontSize.s12,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.privacy,
+                                      );
+                                    },
                                     child: Text(
-                                      countryCode,
-                                      style: getSemiBoldStyle(
-                                        color: ColorManager.black,
+                                      'terms and conditions',
+                                      style: getMediumStyle(
+                                        color: ColorManager.white,
+                                        fontSize: FontSize.s12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              BlocListener<AuthCubit, AuthState>(
+                                listener: (context, state) async {
+                                  if (state is RegisterLoading) {
+                                    UIUtils.showLoading(context);
+                                  } else if (state is RegisterSuccess) {
+                                    UIUtils.hideLoading(context);
+                                            
+                                    final bool isWalkedthrough = serviceLocator
+                                            .get<SharedPreferences>()
+                                            .getBool(
+                                                SharedPrefKeys.isWalkedthrough) ??
+                                        false;
+                                            
+                                    if (isWalkedthrough) {
+                                      if (role == Strings.customer) {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          Routes.home,
+                                        );
+                                      } else {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          Routes.vhome,
+                                        );
+                                      }
+                                    } else {
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        Routes.walkthorough,
+                                      );
+                                    }
+                                            
+                                    final sharedPref =
+                                        serviceLocator.get<SharedPreferences>();
+                                    await sharedPref.setBool(
+                                        SharedPrefKeys.isLogged, true);
+                                  } else if (state is RegisterError) {
+                                    UIUtils.hideLoading(context);
+                                            
+                                    UIUtils.showMessage(state.message);
+                                  }
+                                },
+                                child: CustomElevatedButton(
+                                  label: 'Sign Up',
+                                  textStyle: getBoldStyle(
+                                      color: ColorManager.black,
+                                      fontSize: FontSize.s20),
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      final phone =
+                                          '$countryCode${_phoneController.text}';
+                                      context.read<AuthCubit>().register(
+                                            phone,
+                                            _nameController.text,
+                                            _passwordController.text,
+                                            role ?? Strings.vendor,
+                                          );
+                                    }
+                                  },
+                                ),
+                              ),
+                              Spacer(
+                                flex: 2,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Already have an account?',
+                                    style: getRegularStyle(
+                                      color: ColorManager.white,
+                                      fontSize: FontSize.s17,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        Routes.login,
+                                      );
+                                    },
+                                    child: Text(
+                                      'Login',
+                                      style: getMediumStyle(
+                                        color: ColorManager.primary,
                                         fontSize: FontSize.s17,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          Expanded(
-                            child: CustomTextField(
-                              textInputType: TextInputType.phone,
-                              validation: Validator.validatePhoneNumber,
-                              controller: _phoneController,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 35.h,
-                      ),
-                      Text(
-                        'password',
-                        style:
-                            getRegularStyle(color: ColorManager.white).copyWith(
-                          fontSize: FontSize.s17,
                         ),
                       ),
-                      CustomTextField(
-                        validation: Validator.validatePassword,
-                        isObscured: true,
-                        textInputType: TextInputType.text,
-                        controller: _passwordController,
-                      ),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'By signing up, you agree to our',
-                            style: getRegularStyle(
-                              color: ColorManager.grey,
-                              fontSize: FontSize.s12,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.privacy,
-                              );
-                            },
-                            child: Text(
-                              'terms and conditions',
-                              style: getMediumStyle(
-                                color: ColorManager.white,
-                                fontSize: FontSize.s12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      BlocListener<AuthCubit, AuthState>(
-                        listener: (context, state) async {
-                          if (state is RegisterLoading) {
-                            UIUtils.showLoading(context);
-                          } else if (state is RegisterSuccess) {
-                            UIUtils.hideLoading(context);
-
-                            final bool isWalkedthrough = serviceLocator
-                                    .get<SharedPreferences>()
-                                    .getBool('isWalkedthrough') ??
-                                false;
-
-                            if (isWalkedthrough) {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.home,
-                              );
-                            } else {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.walkthorough,
-                              );
-                            }
-
-                            final sharedPref =
-                                serviceLocator.get<SharedPreferences>();
-                            await sharedPref.setBool(SharedPrefKeys.isLogged, true);
-                          } else if (state is RegisterError) {
-                            UIUtils.hideLoading(context);
-
-                            UIUtils.showMessage(state.message);
-                          }
-                        },
-                        child: CustomElevatedButton(
-                          label: 'Sign Up',
-                          textStyle: getBoldStyle(
-                              color: ColorManager.black,
-                              fontSize: FontSize.s20),
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              final phone =
-                                  '$countryCode${_phoneController.text}';
-                              context.read<AuthCubit>().register(
-                                    phone,
-                                    _nameController.text,
-                                    _passwordController.text,
-                                  );
-                            }
-                          },
-                        ),
-                      ),
-                      Spacer(
-                        flex: 2,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Already have an account?',
-                            style: getRegularStyle(
-                              color: ColorManager.white,
-                              fontSize: FontSize.s17,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.login,
-                              );
-                            },
-                            child: Text(
-                              'Login',
-                              style: getMediumStyle(
-                                color: ColorManager.primary,
-                                fontSize: FontSize.s17,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
                     ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

@@ -17,4 +17,6 @@ class ImageAssets {
 class IconsAssets {
   static const String _iconsPath = 'assets/icons';
   static const String delivery = '$_iconsPath/delivery.png';
+  static const String customer = '$_iconsPath/customer.jpg';
+  static const String vendor = '$_iconsPath/vendor.jpg';
 }

@@ -38,6 +38,8 @@ String determineInitialRoute(SharedPreferences sharedPref) {
     return Routes.walkthorough;
   } else if (!isLogged) {
     return Routes.register;
+  } else if (sharedPref.getString(SharedPrefKeys.role) == Strings.vendor) {
+    return Routes.vhome;
   } else {
     return Routes.home;
   }
@@ -61,7 +63,7 @@ class WajedApp extends StatelessWidget {
         builder: (_, __) => MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RouteGenerator.getRoute,
-          initialRoute: Routes.walkthorough,
+          initialRoute: initialRoute,
         ),
       ),
     );

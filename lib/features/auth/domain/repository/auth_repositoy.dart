@@ -9,6 +9,7 @@ abstract class AuthRepository {
     String phone,
     String password,
     String name,
+    String role,
   );
   Future<Either<Failure, USer>> login(
     String phone,

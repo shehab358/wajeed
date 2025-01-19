@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
@@ -40,10 +42,10 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, USer>> register(
-      String phone, String password, String name) async {
+      String phone, String password, String name, String role) async {
     try {
       final userModel =
-          await _authRemoteDataSource.register(phone, password, name);
+          await _authRemoteDataSource.register(phone, password, name, role);
       final user = userModel.toEntity;
       return Right(user);
     } on AppException catch (e) {
@@ -65,6 +67,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = userModel.toEntity;
       return Right(user);
     } on AppException catch (e) {
+      log(e.toString());
+
       return left(
         Failure(
           e.message,

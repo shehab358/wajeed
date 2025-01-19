@@ -4,6 +4,8 @@ import 'package:wajeed/features/auth/presentation/screens/forget_password.dart';
 import 'package:wajeed/features/auth/presentation/screens/login_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/privacy_policy.dart';
 import 'package:wajeed/features/auth/presentation/screens/register_screen.dart';
+import 'package:wajeed/features/auth/presentation/screens/select_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/vendor_screen.dart';
 import 'package:wajeed/features/home/presentation/screens/walkthrough.dart';
 import 'package:wajeed/features/home/presentation/screens/home_screen.dart';
 
@@ -40,7 +42,16 @@ class RouteGenerator {
           builder: (_) => ForgetPassword(),
           settings: settings,
         );
-
+      case Routes.select:
+        return MaterialPageRoute(
+          builder: (_) => SelectScreen(),
+          settings: settings,
+        );
+      case Routes.vhome:
+        return MaterialPageRoute(
+          builder: (_) => VendorScreen(),
+          settings: settings,
+        );
 
       default:
         return _undefinedRoute();

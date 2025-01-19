@@ -9,10 +9,6 @@ class Register {
   final AuthRepository _authRepostitory;
   Register(this._authRepostitory);
   Future<Either<Failure, USer>> call(
-          String email, String name, String password) async =>
-      await _authRepostitory.register(
-        email,
-        password,
-        name,
-      );
+          String email, String name, String password, String role) async =>
+      await _authRepostitory.register(email, password, name, role);
 }

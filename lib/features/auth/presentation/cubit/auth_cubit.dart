@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:wajeed/features/auth/domain/use_case.dart/login.dart';
@@ -16,9 +18,15 @@ class AuthCubit extends Cubit<AuthState> {
   final Logout _logout;
   final ResetPassword _resetPassword;
 
-  Future<void> register(String email, String name, String password) async {
+  Future<void> register(
+      String email, String name, String password, String role) async {
     emit(RegisterLoading());
-    final result = await _register(email, name, password);
+    final result = await _register(
+      email,
+      name,
+      password,
+      role,
+    );
     result.fold(
       (failure) => emit(RegisterError(failure.message)),
       (user) {
@@ -31,7 +39,16 @@ class AuthCubit extends Cubit<AuthState> {
     emit(LoginLoading());
     final result = await _login(email, password);
     result.fold(
-      (failure) => emit(LoginError(failure.message)),
+      (failure) {
+        log(
+          failure.toString(),
+        );
+        emit(
+          LoginError(
+            failure.message,
+          ),
+        );
+      },
       (user) {
         emit(LoginSuccess());
       },
