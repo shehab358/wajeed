@@ -31,8 +31,6 @@ import 'package:wajeed/features/auth/domain/use_case.dart/register.dart'
     as _i307;
 import 'package:wajeed/features/auth/domain/use_case.dart/reset_password.dart'
     as _i824;
-import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart'
-    as _i11;
 import 'package:wajeed/features/home/data/data_source.dart/home_local_data_source.dart/home_local_data_source.dart'
     as _i633;
 import 'package:wajeed/features/home/data/data_source.dart/home_local_data_source.dart/home_shared_pref_data_source.dart'
@@ -84,12 +82,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i307.Register(gh<_i306.AuthRepository>()));
     gh.singleton<_i824.ResetPassword>(
         () => _i824.ResetPassword(gh<_i306.AuthRepository>()));
-    gh.singleton<_i11.AuthCubit>(() => _i11.AuthCubit(
-          gh<_i307.Register>(),
-          gh<_i383.Login>(),
-          gh<_i202.Logout>(),
-          gh<_i824.ResetPassword>(),
-        ));
     return this;
   }
 }

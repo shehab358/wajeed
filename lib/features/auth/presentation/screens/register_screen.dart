@@ -309,7 +309,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Navigator.pushReplacementNamed(
                                         context,
                                         Routes.login,
+
                                       );
+                                      
                                     },
                                     child: Text(
                                       'Login',
@@ -392,30 +394,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
 }
 
 
-// static Future<String?> phoneParsing(
-//       {String? phone, String? countryCode, bool withCode = true}) async {
-//     PhoneNumber phoneParsed;
-//     try {
-//       phoneParsed = PhoneNumber.parse(
-//         phone!,
-//         callerCountry: IsoCode.values
-//             .where((element) => element.name == countryCode!.toUpperCase())
-//             .first,
-//         destinationCountry: countryCode == 'SA'
-//             ? IsoCode.SA
-//             : IsoCode.values
-//                 .where((element) => element.name == countryCode!.toUpperCase())
-//                 .first,
-//       );
 
-//       if (phoneParsed.isValid()) {
-//         return withCode == true ? phoneParsed.international : phoneParsed.nsn;
-//       } else {
-//         log('Phone number is invalid');
-//         // throw 'Invalid Phone Number';
-//         return null;
-//       }
-//     } on PlatformException {
-//       rethrow;
-//     }
-//   }

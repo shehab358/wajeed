@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
+import 'package:wajeed/core/error/exceptions.dart';
 import 'package:wajeed/features/auth/domain/use_case.dart/login.dart';
 import 'package:wajeed/features/auth/domain/use_case.dart/logout.dart';
 import 'package:wajeed/features/auth/domain/use_case.dart/register.dart';
@@ -81,5 +83,33 @@ class AuthCubit extends Cubit<AuthState> {
         );
       },
     );
+  }
+
+  Future<String?> phoneParsing(
+      {String? phone, String? countryCode, bool withCode = true}) async {
+    PhoneNumber phoneParsed;
+    try {
+      phoneParsed = PhoneNumber.parse(
+        phone!,
+        callerCountry: IsoCode.values
+            .where((element) => element.name == countryCode!.toUpperCase())
+            .first,
+        destinationCountry: countryCode == 'SA'
+            ? IsoCode.SA
+            : IsoCode.values
+                .where((element) => element.name == countryCode!.toUpperCase())
+                .first,
+      );
+
+      if (phoneParsed.isValid()) {
+        return withCode == true ? phoneParsed.international : phoneParsed.nsn;
+      } else {
+        log('Phone number is invalid');
+        // throw 'Invalid Phone Number';
+        return null;
+      }
+    } on AppException {
+      rethrow;
+    }
   }
 }
