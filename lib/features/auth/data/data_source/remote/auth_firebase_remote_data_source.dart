@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
@@ -42,6 +41,7 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
         id: credential.user!.uid,
         name: name,
         phone: phone,
+        isAdmin: false,
       );
 
       CollectionReference<UserModel> usersCollection = getUsersCollection();
@@ -114,7 +114,8 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
   @override
   Future<void> forgetPassword(String phone) {
     try {
-      return FirebaseAuth.instance.sendPasswordResetEmail(email: '$phone@example.com');
+      return FirebaseAuth.instance
+          .sendPasswordResetEmail(email: '$phone@example.com');
     } catch (e) {
       String? message;
       if (e is FirebaseException) {

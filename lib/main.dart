@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wajeed/core/app_bloc_observer.dart';
+import 'package:wajeed/core/constants.dart';
 import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/firebase_options.dart';
 import 'package:wajeed/core/routes/routes.dart';
@@ -19,14 +20,27 @@ Future<void> main() async {
   );
   final sharedPref = serviceLocator.get<SharedPreferences>();
 
-  final bool isLogged = sharedPref.getBool('isLogged') ?? false;
-  final String initialRoute = isLogged ? Routes.home : Routes.login;
+  final String initialRoute = determineInitialRoute(sharedPref);
 
   runApp(
     WajedApp(
       initialRoute,
     ),
   );
+}
+
+String determineInitialRoute(SharedPreferences sharedPref) {
+  final bool isLogged = sharedPref.getBool(SharedPrefKeys.isLogged) ?? false;
+  final bool isWalkThrough =
+      sharedPref.getBool(SharedPrefKeys.isWalkedthrough) ?? false;
+
+  if (!isWalkThrough) {
+    return Routes.walkthorough;
+  } else if (!isLogged) {
+    return Routes.register;
+  } else {
+    return Routes.home;
+  }
 }
 
 class WajedApp extends StatelessWidget {
@@ -47,7 +61,7 @@ class WajedApp extends StatelessWidget {
         builder: (_, __) => MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RouteGenerator.getRoute,
-          initialRoute: initialRoute,
+          initialRoute: Routes.walkthorough,
         ),
       ),
     );

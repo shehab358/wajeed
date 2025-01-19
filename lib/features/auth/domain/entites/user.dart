@@ -4,12 +4,16 @@ class USer extends Equatable {
   final String id;
   final String name;
   final String phone;
-  const USer({
+  final bool isAdmin;
+
+  const USer(
+    {
     required this.id,
     required this.name,
     required this.phone,
+    required this.isAdmin,
   });
 
   @override
-  List<Object?> get props => [id, name, phone];
+  List<Object?> get props => [id, name, phone, isAdmin];
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wajeed/core/constants.dart';
 import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
@@ -197,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                             final sharedPref =
                                 serviceLocator.get<SharedPreferences>();
-                            await sharedPref.setBool('isLogged', true);
+                            await sharedPref.setBool(SharedPrefKeys.isLogged, true);
                           } else if (state is LoginError) {
                             UIUtils.hideLoading(context);
 

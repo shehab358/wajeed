@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wajeed/core/constants.dart';
 import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
@@ -119,7 +120,7 @@ class _WalkthroughState extends State<Walkthrough> {
                       } else {
                         Navigator.pushReplacementNamed(
                           context,
-                          Routes.home,
+                          Routes.register,
                         );
                         final sharedPref =
                             serviceLocator.get<SharedPreferences>();
@@ -151,9 +152,15 @@ class _WalkthroughState extends State<Walkthrough> {
               Spacer(),
               GestureDetector(
                 onTap: () async {
-                  Navigator.pushReplacementNamed(context, Routes.home);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.register,
+                  );
                   final sharedPref = serviceLocator.get<SharedPreferences>();
-                  await sharedPref.setBool('isWalkedthrough', true);
+                  await sharedPref.setBool(
+                    SharedPrefKeys.isWalkedthrough,
+                    true,
+                  );
                 },
                 child: CircleAvatar(
                   backgroundColor: ColorManager.grey.withOpacity(0.2),

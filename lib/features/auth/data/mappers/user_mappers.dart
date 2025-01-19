@@ -6,5 +6,6 @@ extension AuthMappers on UserModel {
         id: id,
         name: name,
         phone: phone,
+        isAdmin: isAdmin,
       );
 }
