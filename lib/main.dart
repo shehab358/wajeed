@@ -47,7 +47,7 @@ class WajedApp extends StatelessWidget {
         builder: (_, __) => MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RouteGenerator.getRoute,
-          initialRoute: Routes.login,
+          initialRoute: initialRoute,
         ),
       ),
     );

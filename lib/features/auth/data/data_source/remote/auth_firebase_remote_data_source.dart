@@ -34,7 +34,7 @@ class AuthFirebaseRemoteDataSource implements AuthRemoteDataSource {
     try {
       UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: '$phone@example.com',
+        email: '$phone@wajed.com',
         password: password,
       );
 
