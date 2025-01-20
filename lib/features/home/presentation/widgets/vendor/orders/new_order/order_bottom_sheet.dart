@@ -197,7 +197,9 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
                   fontSize: FontSize.s18,
                 ),
                 label: 'Accept Order',
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),

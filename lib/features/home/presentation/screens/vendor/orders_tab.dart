@@ -4,9 +4,9 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/orders/new_order_tab.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order_history_tab.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/orders/preparing_order_tab.dart';
+import 'package:wajeed/features/home/presentation/widgets/vendor/orders/new_order/new_order_tab.dart';
+import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order_history/order_history_tab.dart';
+import 'package:wajeed/features/home/presentation/widgets/vendor/orders/preparing_order/preparing_order_tab.dart';
 
 class OrdersTab extends StatefulWidget {
   const OrdersTab({super.key});

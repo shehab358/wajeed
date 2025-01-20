@@ -15,6 +15,7 @@ class ImageAssets {
 class SvgAssets {
   static const String _svgPath = 'assets/svg';
   static const String cash = '$_svgPath/cash.svg';
+  static const String credit = '$_svgPath/credit.svg';
 
 }
 class IconsAssets {
