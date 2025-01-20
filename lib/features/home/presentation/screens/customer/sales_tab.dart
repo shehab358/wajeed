@@ -5,8 +5,8 @@ import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
-import 'package:wajeed/features/home/presentation/widgets/delivery_location_bottom_sheet.dart';
-import 'package:wajeed/features/home/presentation/widgets/filter.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/delivery_location_bottom_sheet.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/filter.dart';
 import 'package:wajeed/features/home/presentation/widgets/resturant.dart';
 
 class SalesTab extends StatelessWidget {

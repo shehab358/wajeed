@@ -10,13 +10,19 @@ class ImageAssets {
   static const String secondWalkthrough = '$_imagePath/walkthough2.png';
   static const String thirdWalkthrough = '$_imagePath/walkthrough3.jpg';
   static const String logo = '$_imagePath/logo.png';
-  static const String password= '$_imagePath/password.jpg';
+  static const String password = '$_imagePath/password.jpg';
+}
+class SvgAssets {
+  static const String _svgPath = 'assets/svg';
+  static const String cash = '$_svgPath/cash.svg';
 
 }
-
 class IconsAssets {
   static const String _iconsPath = 'assets/icons';
   static const String delivery = '$_iconsPath/delivery.png';
   static const String customer = '$_iconsPath/customer.jpg';
   static const String vendor = '$_iconsPath/vendor.jpg';
+  static const String orders = '$_iconsPath/order_icon.png';
+  static const String store = '$_iconsPath/store.png';
+  static const String categories = '$_iconsPath/category.png';
 }

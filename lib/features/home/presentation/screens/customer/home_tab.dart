@@ -18,8 +18,8 @@ import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_slider.dart';
-import 'package:wajeed/features/home/presentation/widgets/delivery_location_bottom_sheet.dart';
-import 'package:wajeed/features/home/presentation/widgets/filter.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/delivery_location_bottom_sheet.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/filter.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});

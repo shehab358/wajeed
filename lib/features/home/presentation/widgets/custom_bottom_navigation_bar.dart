@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
+  final Color backgroundColor;
+  final Color activeColor;
+  final Color inactiveColor;
+  final List<NavItem> items;
 
   const CustomBottomNavigationBar({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
+    required this.items,
+    this.backgroundColor = Colors.black,
+    this.activeColor = Colors.blue,
+    this.inactiveColor = Colors.grey,
   });
 
   @override
@@ -19,64 +26,52 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-
-  final List<Map<String, dynamic>> _navItems = [
-    {
-      "icon": Icons.home_outlined,
-      "label": "Home",
-    },
-    {
-      "icon": Icons.percent,
-      "label": "Sales",
-    },
-    {
-      "icon": Icons.shopping_basket_outlined,
-      "label": "Basket",
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         height: 70.h,
-        margin: EdgeInsets.all(
-          Insets.s24,
-        ),
-        padding: EdgeInsets.all(
-          Insets.s12,
-        ),
+        margin: EdgeInsets.all(Insets.s24),
+        padding: EdgeInsets.all(Insets.s12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            10.r,
-          ),
-          color: ColorManager.black,
+          borderRadius: BorderRadius.circular(10.r),
+          color: widget.backgroundColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(
-            _navItems.length,
+            widget.items.length,
             (index) {
-              final item = _navItems[index];
+              final item = widget.items[index];
               final isSelected = index == widget.currentIndex;
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                   widget.onTabSelected(index);
-                  });
-                },
+                onTap: () => widget.onTabSelected(index),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      item['icon'],
-                      color: isSelected ? ColorManager.primary : Colors.grey,
-                    ),
-                    SizedBox(height: 0.h),
+                    if (item.imageAsset != null)
+                      Image.asset(
+                        item.imageAsset!,
+                        height: 24.h,
+                        color: isSelected
+                            ? widget.activeColor
+                            : widget.inactiveColor,
+                      )
+                    else if (item.icon != null)
+                      Icon(
+                        item.icon,
+                        color: isSelected
+                            ? widget.activeColor
+                            : widget.inactiveColor,
+                      ),
+                    SizedBox(height: 4.h),
                     Text(
-                      item['label'],
+                      item.label,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: isSelected ? ColorManager.primary : Colors.grey,
+                        color: isSelected
+                            ? widget.activeColor
+                            : widget.inactiveColor,
                       ),
                     ),
                   ],
@@ -88,4 +83,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       ),
     );
   }
+}
+
+class NavItem {
+  final IconData? icon;
+  final String? imageAsset; // Path to the image asset
+  final String label;
+
+  NavItem({
+    this.icon,
+    this.imageAsset,
+    required this.label,
+  }) : assert(icon != null || imageAsset != null,
+            'Either icon or imageAsset must be provided.');
 }

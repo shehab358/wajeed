@@ -32,7 +32,7 @@ class CustomElevatedButton extends StatelessWidget {
         shape: isStadiumBorder
             ? const StadiumBorder()
             : RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(17.r),
+                borderRadius: BorderRadius.circular(10.r),
               ),
         backgroundColor: backgroundColor ?? ColorManager.primary,
         padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 14.h),

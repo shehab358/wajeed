@@ -5,9 +5,9 @@ import 'package:wajeed/features/auth/presentation/screens/login_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/privacy_policy.dart';
 import 'package:wajeed/features/auth/presentation/screens/register_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/select_screen.dart';
-import 'package:wajeed/features/home/presentation/screens/vendor_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/vendor/vendor_screen.dart';
 import 'package:wajeed/features/home/presentation/screens/walkthrough.dart';
-import 'package:wajeed/features/home/presentation/screens/home_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/home_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> getRoute(RouteSettings settings) {

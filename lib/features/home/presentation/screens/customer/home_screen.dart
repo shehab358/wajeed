@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wajeed/features/home/presentation/widgets/basket_tab.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/basket_tab.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_bottom_navigation_bar.dart';
-import 'package:wajeed/features/home/presentation/widgets/home_tab.dart';
-import 'package:wajeed/features/home/presentation/widgets/sales_tab.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/home_tab.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/sales_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,6 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: currentIndex,
         onTabSelected: onTabSelected,
+        items: [
+          NavItem(
+            icon: Icons.home_outlined,
+            label: 'Home',
+          ),
+          NavItem(
+            icon: Icons.percent,
+            label: 'Sales',
+          ),
+          NavItem(
+            icon: Icons.shopping_basket_outlined,
+            label: 'Basket',
+          ),
+        ],
       ),
     );
   }
