@@ -62,7 +62,7 @@ class ProductItem extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    UIUtils.showDeleteWarning(context);
+                    UIUtils.showDeleteWarning(context, () {});
                   },
                   icon: Icon(
                     Icons.delete_outline_rounded,

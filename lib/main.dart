@@ -10,6 +10,7 @@ import 'package:wajeed/core/firebase_options.dart';
 import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/routes/routes_generator.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,8 +55,15 @@ class WajedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => serviceLocator.get<AuthCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => serviceLocator.get<AuthCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator.get<CategoryCubit>(),
+        ),
+      ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),
         minTextAdapt: true,

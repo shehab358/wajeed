@@ -33,7 +33,11 @@ class UIUtils {
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
       );
-  static void showDeleteWarning(BuildContext context) => showDialog(
+  static void showDeleteWarning(
+    BuildContext context,
+    final void Function() onTap,
+  ) =>
+      showDialog(
         context: context,
         barrierDismissible: false,
         builder: (_) => PopScope(
@@ -78,6 +82,7 @@ class UIUtils {
                       CustomElevatedButton(
                         label: 'Yes, I\'m sure',
                         onTap: () {
+                          onTap();
                           Navigator.pop(context);
                         },
                         backgroundColor: ColorManager.black,

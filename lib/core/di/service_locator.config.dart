@@ -33,6 +33,20 @@ import 'package:wajeed/features/auth/domain/use_case.dart/reset_password.dart'
     as _i824;
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart'
     as _i11;
+import 'package:wajeed/features/category/data/data_source/category_remote_data_soucre.dart'
+    as _i786;
+import 'package:wajeed/features/category/data/repository.dart/category_repository_impl.dart'
+    as _i721;
+import 'package:wajeed/features/category/domain/repository/category_repository.dart'
+    as _i352;
+import 'package:wajeed/features/category/domain/use_case/add_category.dart'
+    as _i334;
+import 'package:wajeed/features/category/domain/use_case/delete_category.dart'
+    as _i710;
+import 'package:wajeed/features/category/domain/use_case/fetch_categories.dart'
+    as _i23;
+import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart'
+    as _i774;
 import 'package:wajeed/features/home/data/data_source.dart/home_local_data_source.dart/home_local_data_source.dart'
     as _i633;
 import 'package:wajeed/features/home/data/data_source.dart/home_local_data_source.dart/home_shared_pref_data_source.dart'
@@ -68,6 +82,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i342.HomeRepository>(() => _i670.HomeRepositoryImpl());
     gh.singleton<_i644.AuthLocalDataSource>(
         () => _i925.AuthSharedPrefDataSource(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i786.CategoryRemoteDataSource>(
+        () => _i786.CategoryFirebaseRemoteDataSource());
     gh.lazySingleton<_i633.HomeLocalDataSource>(
         () => _i812.HomeSharedPrefDataSource());
     gh.lazySingleton<_i1036.HomeRemoteDataSource>(
@@ -78,12 +94,25 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i464.AuthRemoteDataSource>(),
           gh<_i644.AuthLocalDataSource>(),
         ));
+    gh.lazySingleton<_i352.CategoryRepository>(() =>
+        _i721.CategoryRepositoryImpl(gh<_i786.CategoryRemoteDataSource>()));
     gh.singleton<_i383.Login>(() => _i383.Login(gh<_i306.AuthRepository>()));
     gh.singleton<_i202.Logout>(() => _i202.Logout(gh<_i306.AuthRepository>()));
     gh.singleton<_i307.Register>(
         () => _i307.Register(gh<_i306.AuthRepository>()));
     gh.singleton<_i824.ResetPassword>(
         () => _i824.ResetPassword(gh<_i306.AuthRepository>()));
+    gh.lazySingleton<_i334.AddCategory>(
+        () => _i334.AddCategory(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i710.DeleteCategory>(
+        () => _i710.DeleteCategory(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i23.FetchCategories>(
+        () => _i23.FetchCategories(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i774.CategoryCubit>(() => _i774.CategoryCubit(
+          gh<_i334.AddCategory>(),
+          gh<_i23.FetchCategories>(),
+          gh<_i710.DeleteCategory>(),
+        ));
     gh.singleton<_i11.AuthCubit>(() => _i11.AuthCubit(
           gh<_i307.Register>(),
           gh<_i383.Login>(),
