@@ -5,6 +5,9 @@ import 'package:wajeed/features/auth/presentation/screens/login_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/privacy_policy.dart';
 import 'package:wajeed/features/auth/presentation/screens/register_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/select_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/availability.dart';
+import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/rating_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/store_settings.dart';
 import 'package:wajeed/features/home/presentation/screens/vendor/vendor_screen.dart';
 import 'package:wajeed/features/home/presentation/screens/walkthrough.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/home_screen.dart';
@@ -50,6 +53,21 @@ class RouteGenerator {
       case Routes.vhome:
         return MaterialPageRoute(
           builder: (_) => VendorScreen(),
+          settings: settings,
+        );
+      case Routes.storeSettings:
+        return MaterialPageRoute(
+          builder: (_) => StoreSettings(),
+          settings: settings,
+        );
+      case Routes.availability:
+        return MaterialPageRoute(
+          builder: (_) => AvailabilityPage(),
+          settings: settings,
+        );
+      case Routes.rating:
+        return MaterialPageRoute(
+          builder: (_) => RatingScreen(),
           settings: settings,
         );
 

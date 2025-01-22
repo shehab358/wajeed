@@ -14,7 +14,7 @@ class CustomElevatedButton extends StatelessWidget {
   final TextStyle? textStyle;
   final bool isStadiumBorder;
 
-  const CustomElevatedButton({
+  const CustomElevatedButton({super.key, 
     this.prefixIcon,
     this.textStyle,
     this.isStadiumBorder = true,

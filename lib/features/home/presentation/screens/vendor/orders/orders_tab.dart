@@ -40,6 +40,7 @@ class _OrdersTabState extends State<OrdersTab> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: ColorManager.white,
         body: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: Insets.s16.w,

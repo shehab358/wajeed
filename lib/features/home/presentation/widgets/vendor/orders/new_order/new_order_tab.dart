@@ -12,7 +12,7 @@ class NewOrderTab extends StatelessWidget {
         itemCount: 10,
         itemBuilder: (context, index) {
           return Order(
-            isPreparing: false,
+            isPreparing: true,
             prepare: '3 mins ago',
             buttonText: 'View Order',
             buttonColor: ColorManager.black,

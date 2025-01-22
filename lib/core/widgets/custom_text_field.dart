@@ -7,7 +7,7 @@ import 'package:wajeed/core/resources/values_manager.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField(
-      {this.controller,
+      {super.key, this.controller,
       this.focusNode,
       this.nextFocus,
       this.label,
@@ -88,7 +88,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             borderRadius: BorderRadius.circular(Sizes.s8),
             border: Border.all(
               color: isEnabled
-                  ? widget.borderBackgroundColor ?? ColorManager.transparent
+                  ? widget.borderBackgroundColor ?? ColorManager.grey
                   : ColorManager.grey,
             ),
           ),

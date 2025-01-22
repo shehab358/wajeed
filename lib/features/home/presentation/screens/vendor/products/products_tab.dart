@@ -58,7 +58,9 @@ class ProductsTab extends StatelessWidget {
                   width: 15.w,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    
+                  },
                   child: Container(
                     width: 50.w,
                     height: 50.h,

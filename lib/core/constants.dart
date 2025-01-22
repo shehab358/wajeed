@@ -8,7 +8,15 @@ class ChacheConstants {
 class SharedPrefKeys {
   static const String isLogged = 'isLogged';
   static const String role = 'role';
+  static const String storeName = 'store_name';
   static const String isWalkedthrough = 'isWalkedthrough';
+  static const String storeTagline = 'store_tagline';
+  static const String storeAddress = 'store_address';
+  static const String storeLocation = 'store_location';
+  static const String storeMinOrder = 'store_min_order';
+  static const String storeCity = 'store_city';
+  static const String storePaymentMethod = 'store_payment_method';
+  static const String storeLogo = 'store_logo';
 }
 
 class SharedPrefHelper {
