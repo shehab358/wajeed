@@ -11,6 +11,7 @@ import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/routes/routes_generator.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart';
+import 'package:wajeed/features/product/presentation/cubit/product_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +63,9 @@ class WajedApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => serviceLocator.get<CategoryCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator.get<ProductCubit>(),
         ),
       ],
       child: ScreenUtilInit(

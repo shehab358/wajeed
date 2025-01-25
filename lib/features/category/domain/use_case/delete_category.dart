@@ -10,8 +10,8 @@ class DeleteCategory {
   DeleteCategory(this.repository);
 
   Future<Either<Failure, void>> call(
-    String categoryId,
+    String categoryName,
   ) async {
-    return await repository.delete(categoryId);
+    return await repository.delete(categoryName);
   }
 }

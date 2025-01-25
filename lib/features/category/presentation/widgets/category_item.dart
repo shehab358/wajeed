@@ -57,6 +57,7 @@ class _CategoryItemState extends State<CategoryItem> {
                 } else if (state is CategoryDeleteSuccess) {
                   UIUtils.hideLoading(context);
                   _categoryCubit.fetchCategories();
+                  Navigator.pop(context);
                 }
               },
               child: IconButton(
@@ -65,7 +66,7 @@ class _CategoryItemState extends State<CategoryItem> {
                     context,
                     () {
                       _categoryCubit.deleteCategory(
-                        widget.category.id,
+                        widget.category.name,
                       );
                     },
                   );

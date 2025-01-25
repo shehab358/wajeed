@@ -63,7 +63,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _showFilter(context);
+                    _addCategory(context);
                   },
                   child: Container(
                     width: 50.w,
@@ -111,7 +111,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
     );
   }
 
-  void _showFilter(BuildContext context) {
+  void _addCategory(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

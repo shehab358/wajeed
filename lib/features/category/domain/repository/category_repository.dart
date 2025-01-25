@@ -8,6 +8,6 @@ abstract class CategoryRepository {
     CategoryModel categoryModel,
   );
   Future<Either<Failure, void>> delete(
-    String categoryId,
+    String categoryName,
   );
 }

@@ -61,6 +61,20 @@ import 'package:wajeed/features/home/domain/repository/home_repository.dart'
     as _i342;
 import 'package:wajeed/features/home/presentation/cubit/home_cubit.dart'
     as _i381;
+import 'package:wajeed/features/product/data/data_source/product_remote_data_source.dart'
+    as _i587;
+import 'package:wajeed/features/product/data/repository/product_repository_impl.dart'
+    as _i11;
+import 'package:wajeed/features/product/domain/repository/product_repository.dart'
+    as _i94;
+import 'package:wajeed/features/product/domain/use_case/add_product.dart'
+    as _i714;
+import 'package:wajeed/features/product/domain/use_case/delete_product.dart'
+    as _i326;
+import 'package:wajeed/features/product/domain/use_case/fetch_products.dart'
+    as _i453;
+import 'package:wajeed/features/product/presentation/cubit/product_cubit.dart'
+    as _i558;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -84,6 +98,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i925.AuthSharedPrefDataSource(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i786.CategoryRemoteDataSource>(
         () => _i786.CategoryFirebaseRemoteDataSource());
+    gh.lazySingleton<_i587.ProductRemoteDataSource>(
+        () => _i587.ProductFirebaseRemoteDataSource());
     gh.lazySingleton<_i633.HomeLocalDataSource>(
         () => _i812.HomeSharedPrefDataSource());
     gh.lazySingleton<_i1036.HomeRemoteDataSource>(
@@ -94,6 +110,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i464.AuthRemoteDataSource>(),
           gh<_i644.AuthLocalDataSource>(),
         ));
+    gh.lazySingleton<_i94.ProductRepository>(
+        () => _i11.ProductRepositoryImpl(gh<_i587.ProductRemoteDataSource>()));
     gh.lazySingleton<_i352.CategoryRepository>(() =>
         _i721.CategoryRepositoryImpl(gh<_i786.CategoryRemoteDataSource>()));
     gh.singleton<_i383.Login>(() => _i383.Login(gh<_i306.AuthRepository>()));
@@ -102,6 +120,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i307.Register(gh<_i306.AuthRepository>()));
     gh.singleton<_i824.ResetPassword>(
         () => _i824.ResetPassword(gh<_i306.AuthRepository>()));
+    gh.lazySingleton<_i714.AddProduct>(
+        () => _i714.AddProduct(gh<_i94.ProductRepository>()));
+    gh.lazySingleton<_i326.DeleteProduct>(
+        () => _i326.DeleteProduct(gh<_i94.ProductRepository>()));
+    gh.lazySingleton<_i453.FetchProducts>(
+        () => _i453.FetchProducts(gh<_i94.ProductRepository>()));
     gh.lazySingleton<_i334.AddCategory>(
         () => _i334.AddCategory(gh<_i352.CategoryRepository>()));
     gh.lazySingleton<_i710.DeleteCategory>(
@@ -118,6 +142,11 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i383.Login>(),
           gh<_i202.Logout>(),
           gh<_i824.ResetPassword>(),
+        ));
+    gh.lazySingleton<_i558.ProductCubit>(() => _i558.ProductCubit(
+          gh<_i714.AddProduct>(),
+          gh<_i453.FetchProducts>(),
+          gh<_i326.DeleteProduct>(),
         ));
     return this;
   }

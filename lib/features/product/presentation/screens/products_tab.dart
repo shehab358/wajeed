@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/features/home/presentation/widgets/filter.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/products/product_item.dart';
+import 'package:wajeed/features/product/presentation/cubit/product_cubit.dart';
+import 'package:wajeed/features/product/presentation/cubit/product_states.dart';
+import 'package:wajeed/features/product/presentation/widgets/add_product_widget.dart';
+import 'package:wajeed/features/product/presentation/widgets/product_item.dart';
 
-class ProductsTab extends StatelessWidget {
+class ProductsTab extends StatefulWidget {
   const ProductsTab({super.key});
+
+  @override
+  State<ProductsTab> createState() => _ProductsTabState();
+}
+
+class _ProductsTabState extends State<ProductsTab> {
+  final ProductCubit _productCubit = serviceLocator.get<ProductCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _productCubit.fetchProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +77,7 @@ class ProductsTab extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    
+                    _addProduct(context);
                   },
                   child: Container(
                     width: 50.w,
@@ -82,9 +100,27 @@ class ProductsTab extends StatelessWidget {
               height: 20.h,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) => const ProductItem(),
+              child: BlocBuilder<ProductCubit, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductGetLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is ProductGetError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else if (state is ProductGetSuccess) {
+                    return ListView.builder(
+                      itemCount: _productCubit.products.length,
+                      itemBuilder: (context, index) => ProductItem(
+                        _productCubit.products[index],
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
               ),
             ),
           ],
@@ -98,6 +134,14 @@ class ProductsTab extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       builder: (context) => const Filter(),
+    );
+  }
+
+  void _addProduct(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => const AddProductWidget(),
     );
   }
 }

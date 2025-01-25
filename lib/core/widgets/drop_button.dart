@@ -5,7 +5,7 @@ import 'package:wajeed/core/resources/styles_manager.dart';
 
 class CustomDropButton extends StatefulWidget {
   final void Function(String?) onCategorySelected;
-  final List<Category> categories;
+  final List<dynamic> categories;
   final String hint;
     final String? selectedValue; // Add selectedValue parameter
 

@@ -5,7 +5,7 @@ import 'package:wajeed/features/home/presentation/widgets/custom_bottom_navigati
 import 'package:wajeed/features/category/presentation/screens/categories_tab.dart';
 import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/my_shop_tab.dart';
 import 'package:wajeed/features/home/presentation/screens/vendor/orders/orders_tab.dart';
-import 'package:wajeed/features/home/presentation/screens/vendor/products/products_tab.dart';
+import 'package:wajeed/features/product/presentation/screens/products_tab.dart';
 
 class VendorScreen extends StatefulWidget {
   const VendorScreen({super.key});

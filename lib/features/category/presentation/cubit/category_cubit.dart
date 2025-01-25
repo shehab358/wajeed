@@ -55,10 +55,10 @@ class CategoryCubit extends Cubit<CategoryState> {
     );
   }
 
-  Future<void> deleteCategory(String categoryId) async {
+  Future<void> deleteCategory(String categoryName) async {
     emit(CategoryDeleteLoading());
     final result = await _deleteCategory(
-      categoryId,
+      categoryName,
     );
     result.fold((failure) {
       emit(

@@ -49,17 +49,17 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<Either<Failure, void>> delete(String categoryId) async {
+  Future<Either<Failure, void>> delete(String categoryName) async {
     try {
       await categoryRemoteDataSource.delete(
-        categoryId,
+        categoryName,
       );
       log('deleted repo');
       return right(
         null,
       );
     } on AppException catch (e) {
-            log('failed repo');
+      log('failed repo');
 
       return left(
         Failure(

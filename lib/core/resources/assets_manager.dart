@@ -31,4 +31,5 @@ class IconsAssets {
   static const String orders = '$_iconsPath/order_icon.png';
   static const String store = '$_iconsPath/store.png';
   static const String categories = '$_iconsPath/category.png';
+  static const String fastfood = '$_iconsPath/fastfood.png';
 }

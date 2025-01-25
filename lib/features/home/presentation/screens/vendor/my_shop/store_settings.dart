@@ -153,25 +153,26 @@ class _StoreSettingsState extends State<StoreSettings> {
                 child: Column(
                   children: [
                     GestureDetector(
-                        onTap: () async {
-                          File? temp = await ImageFunctions.galleryImage();
-                          if (temp != null) {
-                            setState(() {
-                              imageFile = temp;
-                            });
-                          } else {
-                            log('No image selected');
-                          }
-                          log(
-                            'Pressed',
-                          );
-                        },
-                        child: CircleAvatar(
-                          radius: 35.r,
-                          backgroundImage: imageFile == null
-                              ? AssetImage(ImageAssets.user)
-                              : FileImage(imageFile!),
-                        )),
+                      onTap: () async {
+                        File? temp = await ImageFunctions.galleryImage();
+                        if (temp != null) {
+                          setState(() {
+                            imageFile = temp;
+                          });
+                        } else {
+                          log('No image selected');
+                        }
+                        log(
+                          'Pressed',
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 35.r,
+                        backgroundImage: imageFile == null
+                            ? AssetImage(ImageAssets.user)
+                            : FileImage(imageFile!),
+                      ),
+                    ),
                     SizedBox(height: Insets.s16.h),
                     Text(
                       'Update Store Logo',

@@ -49,6 +49,7 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                 } else if (state is CategoryAddSuccess) {
                   UIUtils.hideLoading(context);
                   await _categoryCubit.fetchCategories();
+                  Navigator.pop(context);
                 }
               },
               child: CustomElevatedButton(
@@ -61,7 +62,6 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                   _categoryCubit.addCategory(
                     category,
                   );
-                  Navigator.pop(context);
                 },
               ),
             )
