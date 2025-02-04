@@ -4,7 +4,7 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/my_shop/rating.dart';
+import 'package:wajeed/features/store/presentation/widgets/rating.dart';
 
 class RatingScreen extends StatefulWidget {
   const RatingScreen({super.key});

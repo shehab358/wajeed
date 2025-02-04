@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:wajeed/core/constants.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:wajeed/features/category/presentation/screens/categories_tab.dart';
-import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/my_shop_tab.dart';
+import 'package:wajeed/features/store/presentation/screens/my_shop_tab.dart';
 import 'package:wajeed/features/home/presentation/screens/vendor/orders/orders_tab.dart';
 import 'package:wajeed/features/product/presentation/screens/products_tab.dart';
 
@@ -32,29 +35,34 @@ class _VendorScreenState extends State<VendorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: currentIndex,
-        onTabSelected: onTabSelected,
-        activeColor: ColorManager.primary,
-        backgroundColor: ColorManager.starRate,
-        items: [
-          NavItem(
-            imageAsset: IconsAssets.orders,
-            label: 'Orders',
-          ),
-          NavItem(
-            imageAsset: IconsAssets.categories,
-            label: 'categories',
-          ),
-          NavItem(
-            icon: Icons.category_outlined,
-            label: 'Products',
-          ),
-          NavItem(
-            imageAsset: IconsAssets.store,
-            label: 'My Shop',
-          ),
-        ],
+      bottomNavigationBar: GestureDetector(
+        onTap: () => log(
+          UserId.id,
+        ),
+        child: CustomBottomNavigationBar(
+          currentIndex: currentIndex,
+          onTabSelected: onTabSelected,
+          activeColor: ColorManager.primary,
+          backgroundColor: ColorManager.starRate,
+          items: [
+            NavItem(
+              imageAsset: IconsAssets.orders,
+              label: 'Orders',
+            ),
+            NavItem(
+              imageAsset: IconsAssets.categories,
+              label: 'categories',
+            ),
+            NavItem(
+              icon: Icons.category_outlined,
+              label: 'Products',
+            ),
+            NavItem(
+              imageAsset: IconsAssets.store,
+              label: 'My Shop',
+            ),
+          ],
+        ),
       ),
       body: tabs[currentIndex],
     );

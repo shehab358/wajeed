@@ -18,6 +18,7 @@ import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -49,7 +50,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final role =
         serviceLocator.get<SharedPreferences>().getString(SharedPrefKeys.role);
-    log('User role: $role');
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorManager.white,
@@ -69,7 +69,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              Navigator.pushReplacementNamed(context, Routes.select);
+                              Navigator.pushReplacementNamed(
+                                  context, Routes.select);
                             },
                             icon: Icon(
                               Icons.arrow_back_ios,
@@ -99,7 +100,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: Insets.s20.w),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: Insets.s20.w),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,8 +127,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Text(
                                 'phone number',
-                                style: getRegularStyle(color: ColorManager.white)
-                                    .copyWith(
+                                style:
+                                    getRegularStyle(color: ColorManager.white)
+                                        .copyWith(
                                   fontSize: FontSize.s17,
                                 ),
                               ),
@@ -135,8 +138,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      String? newCode = await showCountryCodePicker(
-                                          context, countryCode);
+                                      String? newCode =
+                                          await showCountryCodePicker(
+                                              context, countryCode);
                                       if (newCode != null) {
                                         setState(() {
                                           countryCode = newCode;
@@ -186,8 +190,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               Text(
                                 'password',
-                                style: getRegularStyle(color: ColorManager.white)
-                                    .copyWith(
+                                style:
+                                    getRegularStyle(color: ColorManager.white)
+                                        .copyWith(
                                   fontSize: FontSize.s17,
                                 ),
                               ),
@@ -235,24 +240,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   if (state is RegisterLoading) {
                                     UIUtils.showLoading(context);
                                   } else if (state is RegisterSuccess) {
+                                    
                                     UIUtils.hideLoading(context);
-                                            
+
                                     final bool isWalkedthrough = serviceLocator
                                             .get<SharedPreferences>()
-                                            .getBool(
-                                                SharedPrefKeys.isWalkedthrough) ??
+                                            .getBool(SharedPrefKeys
+                                                .isWalkedthrough) ??
                                         false;
-                                            
+
                                     if (isWalkedthrough) {
                                       if (role == Strings.customer) {
                                         Navigator.pushReplacementNamed(
                                           context,
                                           Routes.home,
                                         );
-                                      } else {
+                                      } else if (role == Strings.vendor) {
                                         Navigator.pushReplacementNamed(
                                           context,
-                                          Routes.vhome,
+                                          Routes.createStore,
                                         );
                                       }
                                     } else {
@@ -261,15 +267,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         Routes.walkthorough,
                                       );
                                     }
-                                            
+
                                     final sharedPref =
                                         serviceLocator.get<SharedPreferences>();
                                     await sharedPref.setBool(
                                         SharedPrefKeys.isLogged, true);
                                   } else if (state is RegisterError) {
                                     UIUtils.hideLoading(context);
-                                            
+
                                     UIUtils.showMessage(state.message);
+                                    log(
+                                      UserId.id,
+                                    );
                                   }
                                 },
                                 child: CustomElevatedButton(
@@ -309,9 +318,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Navigator.pushReplacementNamed(
                                         context,
                                         Routes.login,
-
                                       );
-                                      
                                     },
                                     child: Text(
                                       'Login',
@@ -392,6 +399,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-
-
-

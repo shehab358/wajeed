@@ -5,12 +5,13 @@ import 'package:wajeed/features/auth/presentation/screens/login_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/privacy_policy.dart';
 import 'package:wajeed/features/auth/presentation/screens/register_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/select_screen.dart';
-import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/availability.dart';
-import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/rating_screen.dart';
-import 'package:wajeed/features/home/presentation/screens/vendor/my_shop/store_settings.dart';
+import 'package:wajeed/features/store/presentation/screens/availability.dart';
+import 'package:wajeed/features/store/presentation/screens/create_store.dart';
+import 'package:wajeed/features/store/presentation/screens/rating_screen.dart';
 import 'package:wajeed/features/home/presentation/screens/vendor/vendor_screen.dart';
 import 'package:wajeed/features/home/presentation/screens/walkthrough.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/home_screen.dart';
+import 'package:wajeed/features/store/presentation/screens/store_settings.dart';
 
 class RouteGenerator {
   static Route<dynamic> getRoute(RouteSettings settings) {
@@ -68,6 +69,11 @@ class RouteGenerator {
       case Routes.rating:
         return MaterialPageRoute(
           builder: (_) => RatingScreen(),
+          settings: settings,
+        );
+      case Routes.createStore:
+        return MaterialPageRoute(
+          builder: (_) => CreateStore(),
           settings: settings,
         );
 

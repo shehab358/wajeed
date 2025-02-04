@@ -12,7 +12,7 @@ abstract class ProductRemoteDataSource {
   CollectionReference<ProductModel> getProductsCollection(String userId);
   Future<List<ProductModel>> fetchProducts();
   Future<void> addProduct(ProductModel productModel);
-  Future<void> delete(String productId);
+  Future<void> delete(String productName);
 }
 
 @LazySingleton(as: ProductRemoteDataSource)

@@ -15,11 +15,16 @@ import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
+import 'package:wajeed/core/widgets/error_indicator.dart';
+import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_slider.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/delivery_location_bottom_sheet.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/filter.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/store_item.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_states.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -30,7 +35,7 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   int _currentIndex = 0;
-
+  final StoreCubit storeCubit = serviceLocator.get<StoreCubit>();
   late Timer _timer;
   final List<String> _sliderImages = [
     ImageAssets.offer1,
@@ -41,6 +46,7 @@ class _HomeTabState extends State<HomeTab> {
   void initState() {
     super.initState();
     _startImageSwitching();
+    storeCubit.getAllStores();
   }
 
   @override
@@ -240,39 +246,24 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 SizedBox(
                   height: 150.h,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 100.h,
-                            width: 100.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  ImageAssets.mcdonalds,
-                                ),
-                              ),
-                            ),
+                  child: BlocBuilder<StoreCubit, StoreStates>(
+                    builder: (context, state) {
+                      if (state is AllStoresGetLoading) {
+                        return LoadingIndicator();
+                      } else if (state is AllStoresGetError) {
+                        return ErrorIndicator(state.message);
+                      } else if (state is AllStoresGetSuccess) {
+                        return ListView.builder(
+                          itemBuilder: (context, index) => StoreItem(
+                            storeCubit.stores[index],
                           ),
-                          SizedBox(
-                            height: 6.h,
-                          ),
-                          Text(
-                            'Mcdonalds',
-                            style: getMediumStyle(
-                              color: ColorManager.black,
-                            ).copyWith(
-                              fontSize: FontSize.s18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: storeCubit.stores.length,
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
                   ),
                 ),
               ],

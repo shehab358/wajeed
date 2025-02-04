@@ -14,9 +14,13 @@ import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/utils/ui_utils.dart';
+import 'package:wajeed/core/widgets/error_indicator.dart';
+import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/my_shop/shop_tab.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_states.dart';
+import 'package:wajeed/features/store/presentation/widgets/shop_tab.dart';
 
 class MyShopTab extends StatefulWidget {
   const MyShopTab({super.key});
@@ -27,30 +31,11 @@ class MyShopTab extends StatefulWidget {
 
 class _MyShopTabState extends State<MyShopTab> {
   File? imageFile;
-
-  Future<void> _loadImage() async {
-    final prefs = serviceLocator.get<SharedPreferences>();
-    String? imagePath = prefs.getString('store_logo');
-    if (imagePath != null) {
-      log('Image path retrieved: $imagePath');
-      if (File(imagePath).existsSync()) {
-        setState(() {
-          imageFile = File(imagePath);
-        });
-        log('Image loaded successfully');
-      } else {
-        log('Image file does not exist at path: $imagePath');
-      }
-    } else {
-      log('No image path found in SharedPreferences');
-    }
-  }
-
+  final StoreCubit _storeCubit = serviceLocator.get<StoreCubit>();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _loadImage();
+    _storeCubit.getStore();
   }
 
   @override
@@ -91,24 +76,43 @@ class _MyShopTabState extends State<MyShopTab> {
                         ),
                 ),
                 SizedBox(width: Insets.s16.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'McDonalds',
-                      style: getBoldStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s16,
-                      ),
-                    ),
-                    Text(
-                      'Fast Food',
-                      style: getMediumStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                  ],
+                BlocBuilder<StoreCubit, StoreStates>(
+                  builder: (context, state) {
+                    if (state is StoreGetLoading) {
+                      return LoadingIndicator();
+                    } else if (state is StoreGetError) {
+                      return ErrorIndicator(
+                        state.message,
+                      );
+                    } else if (state is StoreGetSuccess) {
+                      final store = state.store;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            store.name,
+                            style: getBoldStyle(
+                              color: ColorManager.black,
+                              fontSize: FontSize.s16,
+                            ),
+                          ),
+                          Text(
+                            store.tagline,
+                            style: getMediumStyle(
+                              color: ColorManager.black,
+                              fontSize: FontSize.s14,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return SizedBox(
+                        child: Text(
+                          'No store found',
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
@@ -195,6 +199,7 @@ class _MyShopTabState extends State<MyShopTab> {
               child: InkWell(
                 onTap: () {
                   serviceLocator.get<AuthCubit>().logout();
+                  log(UserId.id);
                 },
                 child: Row(
                   children: [

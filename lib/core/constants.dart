@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wajeed/core/di/service_locator.dart';
 
@@ -34,4 +35,8 @@ class SharedPrefHelper {
 class Strings {
   static const String vendor = 'Vendor';
   static const String customer = 'Customer';
+}
+
+class UserId {
+  static String get id => FirebaseAuth.instance.currentUser!.uid;
 }

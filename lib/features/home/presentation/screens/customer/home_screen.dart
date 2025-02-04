@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/basket_tab.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/home_tab.dart';
@@ -31,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: currentIndex,
         onTabSelected: onTabSelected,
+        activeColor: ColorManager.yellow,
+        backgroundColor: ColorManager.starRate,
         items: [
           NavItem(
             icon: Icons.home_outlined,
