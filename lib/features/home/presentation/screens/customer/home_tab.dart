@@ -23,8 +23,8 @@ import 'package:wajeed/features/home/presentation/widgets/custom_slider.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/delivery_location_bottom_sheet.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/filter.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/store_item.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_states.dart';
+import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_states.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -35,7 +35,7 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   int _currentIndex = 0;
-  final StoreCubit storeCubit = serviceLocator.get<StoreCubit>();
+  final AllStoresGetCubit storeCubit = serviceLocator.get<AllStoresGetCubit>();
   late Timer _timer;
   final List<String> _sliderImages = [
     ImageAssets.offer1,
@@ -246,7 +246,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 SizedBox(
                   height: 150.h,
-                  child: BlocBuilder<StoreCubit, StoreStates>(
+                  child: BlocBuilder<AllStoresGetCubit, AllStoresGetStates>(
                     builder: (context, state) {
                       if (state is AllStoresGetLoading) {
                         return LoadingIndicator();

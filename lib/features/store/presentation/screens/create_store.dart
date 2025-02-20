@@ -19,8 +19,8 @@ import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/core/widgets/drop_button.dart';
 import 'package:wajeed/features/store/data/models/store_model.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_states.dart';
+import 'package:wajeed/features/store/presentation/cubit/create_store_cubit/create_store_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/create_store_cubit/create_store_states.dart';
 
 class CreateStore extends StatefulWidget {
   const CreateStore({super.key});
@@ -264,7 +264,7 @@ class _CreateStoreState extends State<CreateStore> {
                     categories: categories,
                   ),
                   SizedBox(height: Insets.s16.h),
-                  BlocListener<StoreCubit, StoreStates>(
+                  BlocListener<CreateStoreCubit, CreateStoreStates>(
                     listener: (context, state) {
                       if (state is StoreCreateLoading) {
                         UIUtils.showLoading(context);
@@ -287,7 +287,7 @@ class _CreateStoreState extends State<CreateStore> {
                       backgroundColor: ColorManager.starRate,
                       label: 'Create Store',
                       onTap: () {
-                        serviceLocator.get<StoreCubit>().createStore(
+                        serviceLocator.get<CreateStoreCubit>().createStore(
                               StoreModel(
                                 name: nameController.text,
                                 isSales: false,

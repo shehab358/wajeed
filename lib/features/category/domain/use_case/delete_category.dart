@@ -11,7 +11,8 @@ class DeleteCategory {
 
   Future<Either<Failure, void>> call(
     String categoryName,
+    String storeId
   ) async {
-    return await repository.delete(categoryName);
+    return await repository.delete(categoryName,storeId);
   }
 }

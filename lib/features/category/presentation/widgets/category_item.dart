@@ -6,8 +6,10 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/features/category/domain/entities/category.dart';
-import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart';
-import 'package:wajeed/features/category/presentation/cubit/category_state.dart';
+import 'package:wajeed/features/category/presentation/cubit/delete_category_c/delete_category_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/delete_category_c/delete_category_states.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
 
 class CategoryItem extends StatefulWidget {
   final Category category;
@@ -21,10 +23,22 @@ class CategoryItem extends StatefulWidget {
 }
 
 class _CategoryItemState extends State<CategoryItem> {
-  final CategoryCubit _categoryCubit = serviceLocator.get<CategoryCubit>();
+  final DeleteCategoryCubit _categoryCubit =
+      serviceLocator.get<DeleteCategoryCubit>();
+  final FetchUserCategoriesCubit _fetchUserCategoryCubit =
+      serviceLocator.get<FetchUserCategoriesCubit>();
+  final StoreGetCubit _storeCubit = serviceLocator.get<StoreGetCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _storeCubit.getStore();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String storeId = _storeCubit.userStore!.id;
+
     return Card(
       elevation: 2,
       child: Container(
@@ -47,17 +61,16 @@ class _CategoryItemState extends State<CategoryItem> {
               ),
             ),
             Spacer(),
-            BlocListener<CategoryCubit, CategoryState>(
+            BlocListener<DeleteCategoryCubit, DeleteCategoryStates>(
               listener: (context, state) {
-                if (state is CategoryDeleteLoading) {
+                if (state is DeleteCategoryCubitLoading) {
                   UIUtils.showLoading(context);
-                } else if (state is CategoryDeleteError) {
+                } else if (state is DeleteCategoryCubitErrorr) {
                   UIUtils.hideLoading(context);
                   UIUtils.showMessage(state.message);
-                } else if (state is CategoryDeleteSuccess) {
+                } else if (state is DeleteCategoryCubitSuccess) {
                   UIUtils.hideLoading(context);
-                  _categoryCubit.fetchCategories();
-                  Navigator.pop(context);
+                  _fetchUserCategoryCubit.fetchUserCategories(storeId);
                 }
               },
               child: IconButton(
@@ -67,6 +80,7 @@ class _CategoryItemState extends State<CategoryItem> {
                     () {
                       _categoryCubit.deleteCategory(
                         widget.category.name,
+                        storeId,
                       );
                     },
                   );

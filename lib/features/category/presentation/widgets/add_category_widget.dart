@@ -8,8 +8,10 @@ import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/features/category/data/models/category_model.dart';
-import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart';
-import 'package:wajeed/features/category/presentation/cubit/category_state.dart';
+import 'package:wajeed/features/category/presentation/cubit/add_category_cubit/add_category_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/add_category_cubit/add_category_states.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
 
 class AddCategoryWidget extends StatefulWidget {
   const AddCategoryWidget({super.key});
@@ -19,11 +21,22 @@ class AddCategoryWidget extends StatefulWidget {
 }
 
 class _AddCategoryWidgetState extends State<AddCategoryWidget> {
-  final CategoryCubit _categoryCubit = serviceLocator.get<CategoryCubit>();
+  final AddCategoryCubit _addCategoryCubit =
+      serviceLocator.get<AddCategoryCubit>();
+  final FetchUserCategoriesCubit _fetchUserCategoryCubit =
+      serviceLocator.get<FetchUserCategoriesCubit>();
+  final StoreGetCubit _storeCubit = serviceLocator.get<StoreGetCubit>();
+  @override
+  void initState() {
+    super.initState();
+    _storeCubit.getStore();
+  }
 
   final TextEditingController _categoryController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    String storeId = _storeCubit.userStore!.id;
+
     return Container(
       height: 400.h,
       child: Padding(
@@ -39,16 +52,16 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
             SizedBox(
               height: 20.h,
             ),
-            BlocListener<CategoryCubit, CategoryState>(
+            BlocListener<AddCategoryCubit, AddCategoryStates>(
               listener: (context, state) async {
-                if (state is CategoryAddLoading) {
+                if (state is AddCategoryLoading) {
                   UIUtils.showLoading(context);
-                } else if (state is CategoryAddError) {
+                } else if (state is AddCategoryError) {
                   UIUtils.hideLoading(context);
                   UIUtils.showMessage(state.message);
-                } else if (state is CategoryAddSuccess) {
+                } else if (state is AddCategorySuccess) {
                   UIUtils.hideLoading(context);
-                  await _categoryCubit.fetchCategories();
+                  await _fetchUserCategoryCubit.fetchUserCategories(storeId);
                   Navigator.pop(context);
                 }
               },
@@ -59,9 +72,7 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                     FirebaseAuth.instance.currentUser!.uid,
                     name: _categoryController.text,
                   );
-                  _categoryCubit.addCategory(
-                    category,
-                  );
+                  _addCategoryCubit.addCategory(category, storeId);
                 },
               ),
             )

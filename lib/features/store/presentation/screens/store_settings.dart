@@ -13,6 +13,7 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
+import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
@@ -20,8 +21,10 @@ import 'package:wajeed/core/widgets/drop_button.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/store/data/models/store_model.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_states.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_states.dart';
+import 'package:wajeed/features/store/presentation/cubit/update_store_cubit/update_store_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/update_store_cubit/update_store_states.dart';
 
 class StoreSettings extends StatefulWidget {
   const StoreSettings({super.key});
@@ -100,11 +103,13 @@ class _StoreSettingsState extends State<StoreSettings> {
   ];
 
   File? imageFile;
-  final StoreCubit _storeCubit = serviceLocator.get<StoreCubit>();
+  final StoreGetCubit _getStoreCubit = serviceLocator.get<StoreGetCubit>();
+  final UpdateStoreCubit _updateStoreCubit =
+      serviceLocator.get<UpdateStoreCubit>();
   @override
   void initState() {
     super.initState();
-    _storeCubit.getStore();
+    _getStoreCubit.getStore();
   }
 
   @override
@@ -128,7 +133,7 @@ class _StoreSettingsState extends State<StoreSettings> {
           horizontal: Insets.s20.w,
         ),
         child: SingleChildScrollView(
-          child: BlocBuilder<StoreCubit, StoreStates>(
+          child: BlocBuilder<StoreGetCubit, StoreGetStates>(
             builder: (context, state) {
               if (state is StoreGetLoading) {
                 return LoadingIndicator();
@@ -295,7 +300,7 @@ class _StoreSettingsState extends State<StoreSettings> {
                       categories: categories,
                     ),
                     SizedBox(height: Insets.s16.h),
-                    BlocListener<StoreCubit, StoreStates>(
+                    BlocListener<UpdateStoreCubit, UpdateStoreStates>(
                       listener: (context, state) async {
                         if (state is StoreUpdateLoading) {
                         } else if (state is StoreUpdateError) {
@@ -305,14 +310,13 @@ class _StoreSettingsState extends State<StoreSettings> {
                           UIUtils.showMessage(
                             'Store Updated Successfully',
                           );
-                          Navigator.pop(context);
                         }
                       },
                       child: CustomElevatedButton(
                         backgroundColor: ColorManager.starRate,
                         label: 'Save',
                         onTap: () async {
-                          await _storeCubit.updateStore(
+                          await _updateStoreCubit.updateStore(
                             StoreModel(
                               name: nameController.text,
                               userId: UserId.id,
@@ -327,7 +331,7 @@ class _StoreSettingsState extends State<StoreSettings> {
                             ),
                             UserId.id,
                           );
-                          await _storeCubit.getStore();
+                          await _getStoreCubit.getStore();
                         },
                       ),
                     ),

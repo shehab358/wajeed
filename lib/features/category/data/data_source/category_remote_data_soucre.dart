@@ -6,13 +6,20 @@ import 'package:injectable/injectable.dart';
 import 'package:wajeed/core/error/exceptions.dart';
 import 'package:wajeed/features/auth/data/models/user_model.dart';
 import 'package:wajeed/features/category/data/models/category_model.dart';
+import 'package:wajeed/features/store/data/models/store_model.dart';
 
 abstract class CategoryRemoteDataSource {
   CollectionReference<UserModel> getUsersCollection();
-  CollectionReference<CategoryModel> getCategoriesCollection(String userId);
-  Future<List<CategoryModel>> fetchCategories();
-  Future<void> addCategory(CategoryModel categoryModel);
-  Future<void> delete(String categoryName);
+  CollectionReference<StoreModel> getUserStoresCollection(String userId);
+  CollectionReference<StoreModel> getStoresCollection();
+  CollectionReference<CategoryModel> getAllStoresCategoriesCollection(
+      String storeId);
+  CollectionReference<CategoryModel> getUserStoresCategoriesCollection(
+      String userId, String storeId);
+  Future<List<CategoryModel>> fetchUserCategories(String storeId);
+  Future<List<CategoryModel>> fetchAllCategories(String storeId);
+  Future<void> addCategory(CategoryModel categoryModel, String storeId);
+  Future<void> delete(String categoryName, String storeId);
 }
 
 @LazySingleton(as: CategoryRemoteDataSource)
@@ -44,10 +51,55 @@ class CategoryFirebaseRemoteDataSource implements CategoryRemoteDataSource {
   }
 
   @override
-  CollectionReference<CategoryModel> getCategoriesCollection(String userId) {
+  CollectionReference<StoreModel> getUserStoresCollection(String userId) {
     try {
       return getUsersCollection()
           .doc(userId)
+          .collection('UserStores')
+          .withConverter<StoreModel>(
+            fromFirestore: (docSnapshot, _) =>
+                StoreModel.fromJson(docSnapshot.data()!),
+            toFirestore: (storeModel, _) => storeModel.toJson(),
+          );
+    } catch (e) {
+      String? message;
+      if (e is FirebaseException) {
+        message = e.code;
+      }
+      throw RemoteException(
+        message ?? 'An error occurred',
+      );
+    }
+  }
+
+  @override
+  CollectionReference<StoreModel> getStoresCollection() {
+    try {
+      return FirebaseFirestore.instance
+          .collection('allStores')
+          .withConverter<StoreModel>(
+            fromFirestore: (docSnapshot, _) =>
+                StoreModel.fromJson(docSnapshot.data()!),
+            toFirestore: (storeModel, _) => storeModel.toJson(),
+          );
+    } catch (e) {
+      String? message;
+      if (e is FirebaseException) {
+        message = e.code;
+      }
+      throw RemoteException(
+        message ?? 'An error occurred',
+      );
+    }
+  }
+
+  @override
+  CollectionReference<CategoryModel> getAllStoresCategoriesCollection(
+    String storeId,
+  ) {
+    try {
+      return getStoresCollection()
+          .doc(storeId)
           .collection('categories')
           .withConverter<CategoryModel>(
             fromFirestore: (docSnapshot, _) =>
@@ -66,17 +118,17 @@ class CategoryFirebaseRemoteDataSource implements CategoryRemoteDataSource {
   }
 
   @override
-  Future<List<CategoryModel>> fetchCategories() async {
+  CollectionReference<CategoryModel> getUserStoresCategoriesCollection(
+      String userId, String storeId) {
     try {
-      final String? userId = getCurrentUserId();
-      if (userId == null) {
-        throw RemoteException('User not logged in');
-      }
-      CollectionReference<CategoryModel> categoriesCollection =
-          getCategoriesCollection(userId);
-      QuerySnapshot<CategoryModel> querySnapshot =
-          await categoriesCollection.get();
-      return querySnapshot.docs.map((doc) => doc.data()).toList();
+      return getUserStoresCollection(userId)
+          .doc(storeId)
+          .collection('categories')
+          .withConverter<CategoryModel>(
+            fromFirestore: (docSnapshot, _) =>
+                CategoryModel.fromJson(docSnapshot.data()!),
+            toFirestore: (categoryModel, _) => categoryModel.toJson(),
+          );
     } catch (e) {
       String? message;
       if (e is FirebaseException) {
@@ -89,19 +141,57 @@ class CategoryFirebaseRemoteDataSource implements CategoryRemoteDataSource {
   }
 
   @override
-  Future<void> addCategory(CategoryModel categoryModel) async {
+  Future<void> addCategory(CategoryModel categoryModel, String storeId) async {
     try {
       final String? userId = getCurrentUserId();
       if (userId == null) {
         throw RemoteException('User not logged in');
       }
-      CollectionReference<CategoryModel> categoriesCollection =
-          getCategoriesCollection(userId);
-      await categoriesCollection.add(categoryModel);
+
+      // إنشاء ID مشترك للوثيقتين
+      final String newCategoryId =
+          getAllStoresCategoriesCollection(storeId).doc().id;
+
+      // تحديث النموذج ليحتوي على نفس الـ ID
+      categoryModel = categoryModel.copyWith(id: newCategoryId);
+
+      // إضافة إلى جميع الفئات في المتجر
+      await getAllStoresCategoriesCollection(storeId)
+          .doc(newCategoryId)
+          .set(categoryModel);
+
+      // إضافة إلى فئات المتجر الخاصة بالمستخدم
+      await getUserStoresCategoriesCollection(userId, storeId)
+          .doc(newCategoryId)
+          .set(categoryModel);
     } catch (e) {
+      log(e.toString());
+
       String? message;
       if (e is FirebaseException) {
         message = e.code;
+      }
+      throw RemoteException(message ?? 'An error occurred');
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> fetchUserCategories(String storeId) async {
+    try {
+      final String? userId = getCurrentUserId();
+      if (userId == null) {
+        throw RemoteException('User not logged in');
+      }
+      CollectionReference<CategoryModel> userCats =
+          getUserStoresCategoriesCollection(userId, storeId);
+      QuerySnapshot<CategoryModel> cats = await userCats.get();
+      return cats.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      String? message;
+      log(e.toString());
+      if (e is FirebaseException) {
+        message = e.code;
+        log(e.code);
       }
       throw RemoteException(
         message ?? 'An error occurred',
@@ -110,27 +200,60 @@ class CategoryFirebaseRemoteDataSource implements CategoryRemoteDataSource {
   }
 
   @override
-  Future<void> delete(String categoryName) async {
+  Future<List<CategoryModel>> fetchAllCategories(String storeId) async {
+    try {
+      final String? userId = getCurrentUserId();
+      if (userId == null) {
+        throw RemoteException('User not logged in');
+      }
+      CollectionReference<CategoryModel> userCats =
+          getAllStoresCategoriesCollection(storeId);
+      QuerySnapshot<CategoryModel> cats = await userCats.get();
+      return cats.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      String? message;
+      log(e.toString());
+      if (e is FirebaseException) {
+        message = e.code;
+        log(e.code);
+      }
+      throw RemoteException(
+        message ?? 'An error occurred',
+      );
+    }
+  }
+
+  @override
+  Future<void> delete(String categoryName, String storeId) async {
     try {
       final String? userId = getCurrentUserId();
       if (userId == null) {
         throw RemoteException('User not logged in');
       }
 
-      final CollectionReference<CategoryModel> categoriesCollection =
-          getCategoriesCollection(userId);
+      final CollectionReference<CategoryModel> userCategoriesCollection =
+          getUserStoresCategoriesCollection(userId, storeId);
 
-      QuerySnapshot<CategoryModel> snapshot = await categoriesCollection
+      QuerySnapshot<CategoryModel> userSnapshot = await userCategoriesCollection
           .where('name', isEqualTo: categoryName)
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        for (var doc in snapshot.docs) {
-          await doc.reference.delete(); 
-          log('Deleted document with ID: ${doc.id}');
-        }
-      } else {
-        log('No document found with categoryName: $categoryName');
+      for (var doc in userSnapshot.docs) {
+        await doc.reference.delete();
+        log('Deleted from user categories: ${doc.id}');
+      }
+
+      final CollectionReference<CategoryModel> allStoresCategoriesCollection =
+          getAllStoresCategoriesCollection(storeId);
+
+      QuerySnapshot<CategoryModel> allStoresSnapshot =
+          await allStoresCategoriesCollection
+              .where('name', isEqualTo: categoryName)
+              .get();
+
+      for (var doc in allStoresSnapshot.docs) {
+        await doc.reference.delete();
+        log('Deleted from all stores categories: ${doc.id}');
       }
     } catch (e, stackTrace) {
       log('Failed to delete category: $e');

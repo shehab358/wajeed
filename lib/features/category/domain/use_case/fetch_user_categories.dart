@@ -1,17 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:wajeed/core/error/failure.dart';
-import 'package:wajeed/features/category/data/models/category_model.dart';
+import 'package:wajeed/features/category/domain/entities/category.dart';
 import 'package:wajeed/features/category/domain/repository/category_repository.dart';
 
 @lazySingleton
-class FetchCategories {
+class FetchUserCategories {
   final CategoryRepository repository;
 
-  FetchCategories(this.repository);
+  FetchUserCategories(this.repository);
 
-  Future<Either<Failure, List<CategoryModel>>> call(
+  Future<Either<Failure, List<Category>>> call(
+    String storeId,
   ) async {
-    return await repository.fetchCategories();
+    return await repository.fetchUserCategories(
+      storeId,
+    );
   }
 }

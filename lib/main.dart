@@ -10,9 +10,15 @@ import 'package:wajeed/core/firebase_options.dart';
 import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/routes/routes_generator.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart';
-import 'package:wajeed/features/product/presentation/cubit/product_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/add_category_cubit/add_category_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/delete_category_c/delete_category_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_all_categories_cubit/fetch_all_categories_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/create_store_cubit/create_store_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/delete_store_cubit/delete_store_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/update_store_cubit/update_store_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,13 +69,31 @@ class WajedApp extends StatelessWidget {
           create: (_) => serviceLocator.get<AuthCubit>(),
         ),
         BlocProvider(
-          create: (_) => serviceLocator.get<StoreCubit>(),
+          create: (_) => serviceLocator.get<AllStoresGetCubit>(),
         ),
         BlocProvider(
-          create: (context) => serviceLocator.get<CategoryCubit>(),
+          create: (_) => serviceLocator.get<CreateStoreCubit>(),
         ),
         BlocProvider(
-          create: (context) => serviceLocator.get<ProductCubit>(),
+          create: (_) => serviceLocator.get<DeleteStoreCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator.get<StoreGetCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator.get<UpdateStoreCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator.get<AddCategoryCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator.get<DeleteCategoryCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator.get<FetchAllCategoriesCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator.get<FetchUserCategoriesCubit>(),
         ),
       ],
       child: ScreenUtilInit(

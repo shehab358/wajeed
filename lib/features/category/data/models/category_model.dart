@@ -15,4 +15,13 @@ class CategoryModel extends Category {
           json['id'],
           name: json['name'],
         );
+  CategoryModel copyWith({
+    String? id,
+    String? name,
+  }) {
+    return CategoryModel(
+      id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

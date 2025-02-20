@@ -18,8 +18,8 @@ import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_states.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_states.dart';
 import 'package:wajeed/features/store/presentation/widgets/shop_tab.dart';
 
 class MyShopTab extends StatefulWidget {
@@ -31,7 +31,7 @@ class MyShopTab extends StatefulWidget {
 
 class _MyShopTabState extends State<MyShopTab> {
   File? imageFile;
-  final StoreCubit _storeCubit = serviceLocator.get<StoreCubit>();
+  final StoreGetCubit _storeCubit = serviceLocator.get<StoreGetCubit>();
   @override
   void initState() {
     super.initState();
@@ -76,7 +76,7 @@ class _MyShopTabState extends State<MyShopTab> {
                         ),
                 ),
                 SizedBox(width: Insets.s16.w),
-                BlocBuilder<StoreCubit, StoreStates>(
+                BlocBuilder<StoreGetCubit, StoreGetStates>(
                   builder: (context, state) {
                     if (state is StoreGetLoading) {
                       return LoadingIndicator();

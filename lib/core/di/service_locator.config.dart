@@ -12,8 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wajeed/core/di/register_module.dart';
+import 'package:wajeed/core/di/register_module.dart' as _i85;
 import 'package:wajeed/features/auth/data/data_source/local/auth_local_data_source.dart'
     as _i644;
 import 'package:wajeed/features/auth/data/data_source/local/auth_shared_pref_data_source.dart'
@@ -34,20 +33,23 @@ import 'package:wajeed/features/auth/domain/use_case.dart/reset_password.dart'
     as _i824;
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart'
     as _i11;
-import 'package:wajeed/features/category/data/data_source/category_remote_data_soucre.dart'
-    as _i786;
-import 'package:wajeed/features/category/data/repository.dart/category_repository_impl.dart'
-    as _i721;
+import 'package:wajeed/features/category/data/data_source/category_remote_data_soucre.dart';
+import 'package:wajeed/features/category/data/repository.dart/category_repository_impl.dart';
 import 'package:wajeed/features/category/domain/repository/category_repository.dart'
     as _i352;
 import 'package:wajeed/features/category/domain/use_case/add_category.dart'
     as _i334;
 import 'package:wajeed/features/category/domain/use_case/delete_category.dart'
     as _i710;
-import 'package:wajeed/features/category/domain/use_case/fetch_categories.dart'
-    as _i23;
-import 'package:wajeed/features/category/presentation/cubit/category_cubit.dart'
-    as _i774;
+import 'package:wajeed/features/category/domain/use_case/fetch_all_categories.dart'
+    as _i315;
+import 'package:wajeed/features/category/domain/use_case/fetch_user_categories.dart'
+    as _i538;
+import 'package:wajeed/features/category/presentation/cubit/add_category_cubit/add_category_cubit.dart'
+    as _i884;
+import 'package:wajeed/features/category/presentation/cubit/delete_category_c/delete_category_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_all_categories_cubit/fetch_all_categories_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
 import 'package:wajeed/features/home/data/data_source.dart/home_local_data_source.dart/home_local_data_source.dart'
     as _i633;
 import 'package:wajeed/features/home/data/data_source.dart/home_local_data_source.dart/home_shared_pref_data_source.dart'
@@ -91,8 +93,16 @@ import 'package:wajeed/features/store/domain/use_case/get_all_stores.dart'
 import 'package:wajeed/features/store/domain/use_case/get_store.dart' as _i207;
 import 'package:wajeed/features/store/domain/use_case/update_store.dart'
     as _i369;
-import 'package:wajeed/features/store/presentation/cubit/store_cubit.dart'
-    as _i320;
+import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_cubit.dart'
+    as _i1047;
+import 'package:wajeed/features/store/presentation/cubit/create_store_cubit/create_store_cubit.dart'
+    as _i938;
+import 'package:wajeed/features/store/presentation/cubit/delete_store_cubit/delete_store_cubit.dart'
+    as _i968;
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart'
+    as _i348;
+import 'package:wajeed/features/store/presentation/cubit/update_store_cubit/update_store_cubit.dart'
+    as _i202;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -106,7 +116,7 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final registerModule = _$RegisterModule();
-    await gh.factoryAsync<SharedPreferences>(
+    await gh.factoryAsync<_i460.SharedPreferences>(
       () => registerModule.getSharedPref,
       preResolve: true,
     );
@@ -114,18 +124,30 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i342.HomeRepository>(() => _i670.HomeRepositoryImpl());
     gh.singleton<_i644.AuthLocalDataSource>(
         () => _i925.AuthSharedPrefDataSource(gh<_i460.SharedPreferences>()));
-    gh.lazySingleton<_i786.CategoryRemoteDataSource>(
-        () => _i786.CategoryFirebaseRemoteDataSource());
     gh.lazySingleton<_i587.ProductRemoteDataSource>(
         () => _i587.ProductFirebaseRemoteDataSource());
     gh.lazySingleton<_i631.StoreRemoteDataSource>(
         () => _i631.StoreFirebaseRemoteDataSource());
+    gh.lazySingleton<CategoryRemoteDataSource>(
+        () => CategoryFirebaseRemoteDataSource());
     gh.lazySingleton<_i633.HomeLocalDataSource>(
         () => _i812.HomeSharedPrefDataSource());
     gh.lazySingleton<_i1036.HomeRemoteDataSource>(
         () => _i232.HomeApiRemoteDataSource());
+    gh.lazySingleton<_i352.CategoryRepository>(
+        () => CategoryRepositoryImpl(gh<CategoryRemoteDataSource>()));
     gh.singleton<_i464.AuthRemoteDataSource>(
         () => _i473.AuthFirebaseRemoteDataSource());
+    gh.lazySingleton<_i334.AddCategory>(
+        () => _i334.AddCategory(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i710.DeleteCategory>(
+        () => _i710.DeleteCategory(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i315.FetchAllCategories>(
+        () => _i315.FetchAllCategories(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i538.FetchUserCategories>(
+        () => _i538.FetchUserCategories(gh<_i352.CategoryRepository>()));
+    gh.lazySingleton<_i884.AddCategoryCubit>(
+        () => _i884.AddCategoryCubit(gh<_i334.AddCategory>()));
     gh.singleton<_i306.AuthRepository>(() => _i274.AuthRepositoryImpl(
           gh<_i464.AuthRemoteDataSource>(),
           gh<_i644.AuthLocalDataSource>(),
@@ -134,8 +156,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i11.ProductRepositoryImpl(gh<_i587.ProductRemoteDataSource>()));
     gh.lazySingleton<_i636.StoreRepository>(
         () => _i67.StoresRepositoryImpl(gh<_i631.StoreRemoteDataSource>()));
-    gh.lazySingleton<_i352.CategoryRepository>(() =>
-        _i721.CategoryRepositoryImpl(gh<_i786.CategoryRemoteDataSource>()));
+    gh.lazySingleton<FetchUserCategoriesCubit>(
+        () => FetchUserCategoriesCubit(gh<_i538.FetchUserCategories>()));
+    gh.lazySingleton<FetchAllCategoriesCubit>(
+        () => FetchAllCategoriesCubit(gh<_i315.FetchAllCategories>()));
+    gh.lazySingleton<DeleteCategoryCubit>(
+        () => DeleteCategoryCubit(gh<_i710.DeleteCategory>()));
     gh.singleton<_i383.Login>(() => _i383.Login(gh<_i306.AuthRepository>()));
     gh.singleton<_i202.Logout>(() => _i202.Logout(gh<_i306.AuthRepository>()));
     gh.singleton<_i307.Register>(
@@ -148,17 +174,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i326.DeleteProduct(gh<_i94.ProductRepository>()));
     gh.lazySingleton<_i453.FetchProducts>(
         () => _i453.FetchProducts(gh<_i94.ProductRepository>()));
-    gh.lazySingleton<_i334.AddCategory>(
-        () => _i334.AddCategory(gh<_i352.CategoryRepository>()));
-    gh.lazySingleton<_i710.DeleteCategory>(
-        () => _i710.DeleteCategory(gh<_i352.CategoryRepository>()));
-    gh.lazySingleton<_i23.FetchCategories>(
-        () => _i23.FetchCategories(gh<_i352.CategoryRepository>()));
-    gh.lazySingleton<_i774.CategoryCubit>(() => _i774.CategoryCubit(
-          gh<_i334.AddCategory>(),
-          gh<_i23.FetchCategories>(),
-          gh<_i710.DeleteCategory>(),
-        ));
     gh.lazySingleton<_i406.CreateStore>(
         () => _i406.CreateStore(gh<_i636.StoreRepository>()));
     gh.lazySingleton<_i21.DeleteStore>(
@@ -169,13 +184,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i207.GetStore(gh<_i636.StoreRepository>()));
     gh.lazySingleton<_i369.UpdateStore>(
         () => _i369.UpdateStore(gh<_i636.StoreRepository>()));
-    gh.lazySingleton<_i320.StoreCubit>(() => _i320.StoreCubit(
-          gh<_i471.GetAllStores>(),
-          gh<_i406.CreateStore>(),
-          gh<_i369.UpdateStore>(),
-          gh<_i21.DeleteStore>(),
-          gh<_i207.GetStore>(),
-        ));
+    gh.lazySingleton<_i348.StoreGetCubit>(
+        () => _i348.StoreGetCubit(gh<_i207.GetStore>()));
     gh.singleton<_i11.AuthCubit>(() => _i11.AuthCubit(
           gh<_i307.Register>(),
           gh<_i383.Login>(),
@@ -187,8 +197,16 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i453.FetchProducts>(),
           gh<_i326.DeleteProduct>(),
         ));
+    gh.lazySingleton<_i938.CreateStoreCubit>(
+        () => _i938.CreateStoreCubit(gh<_i406.CreateStore>()));
+    gh.lazySingleton<_i1047.AllStoresGetCubit>(
+        () => _i1047.AllStoresGetCubit(gh<_i471.GetAllStores>()));
+    gh.lazySingleton<_i968.DeleteStoreCubit>(
+        () => _i968.DeleteStoreCubit(gh<_i21.DeleteStore>()));
+    gh.lazySingleton<_i202.UpdateStoreCubit>(
+        () => _i202.UpdateStoreCubit(gh<_i369.UpdateStore>()));
     return this;
   }
 }
 
-class _$RegisterModule extends RegisterModule {}
+class _$RegisterModule extends _i85.RegisterModule {}
