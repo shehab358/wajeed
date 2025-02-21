@@ -155,7 +155,11 @@ class ProductFirebaseRemoteDataSource implements ProductRemoteDataSource {
     try {
       CollectionReference<ProductModel> allProducts =
           getAllStoresProductsCollection(storeId, categoryId);
+      log('Fetching products from path: ${allProducts.path}');
+
       QuerySnapshot<ProductModel> products = await allProducts.get();
+      log('Number of products found: ${products.docs.length}');
+
       return products.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       String? message;

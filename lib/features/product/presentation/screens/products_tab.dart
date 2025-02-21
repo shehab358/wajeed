@@ -31,8 +31,8 @@ class _ProductsTabState extends State<ProductsTab> {
       serviceLocator.get<FetchUserCategoriesCubit>();
   final StoreGetCubit _storeGetCubit = serviceLocator.get<StoreGetCubit>();
 
-  String? selectedCategoryId; // الفئة المحددة
-  List<Category> categories = []; // قائمة الفئات
+  String? selectedCategoryId; 
+  List<Category> categories = []; 
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _ProductsTabState extends State<ProductsTab> {
           setState(() {
             categories = _fetchUserCategoriesCubit.categories;
             selectedCategoryId =
-                categories.first.id; // اختيار أول فئة افتراضيًا
+                categories.first.id; 
           });
           _productCubit.fetchUserProducts(storeId, selectedCategoryId!);
         }

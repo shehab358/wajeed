@@ -12,6 +12,8 @@ class Store extends Equatable {
   final String paymentMethod;
   final String category;
   final bool isSales;
+  late double rating;
+  late int numberOfRatings;
 
   Store({
     this.id = '',
@@ -24,6 +26,8 @@ class Store extends Equatable {
     required this.minimumOrderCost,
     required this.paymentMethod,
     required this.category,
+    this.numberOfRatings = 0,
+    this.rating = 0.0,
   });
 
   @override

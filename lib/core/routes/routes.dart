@@ -1,6 +1,7 @@
 class Routes {
   static const String home = '/home';
   static const String vhome = '/vhome';
+  static const String store = '/store';
   static const String createStore = '/create_store';
   static const String storeSettings = '/storeSettings';
   static const String select = '/select';

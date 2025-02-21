@@ -34,10 +34,9 @@ class _AddProductWidgetState extends State<AddProductWidget> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _priceBeforeController = TextEditingController();
   final AddProductCubit _productCubit = serviceLocator.get<AddProductCubit>();
-  final FetchUserCategoriesCubit _fetchUserCategoriesCubit =
-      serviceLocator.get<FetchUserCategoriesCubit>();
+
   final StoreGetCubit _storeGetCubit = serviceLocator.get<StoreGetCubit>();
-  Category? selectedCategory; // Store selected category
+  Category? selectedCategory; 
 
   @override
   void initState() {
@@ -178,7 +177,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                       _productCubit.addProduct(
                         ProductModel(
                           name: _productName.text,
-                          category: selectedCategory! ,
+                          category: selectedCategory!,
                           barcode: barcode,
                           price: price,
                           discount: priceBefore,

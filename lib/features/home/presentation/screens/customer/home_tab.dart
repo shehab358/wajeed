@@ -254,8 +254,17 @@ class _HomeTabState extends State<HomeTab> {
                         return ErrorIndicator(state.message);
                       } else if (state is AllStoresGetSuccess) {
                         return ListView.builder(
-                          itemBuilder: (context, index) => StoreItem(
-                            storeCubit.stores[index],
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.store,
+                                arguments: state.stores[index],
+                              );
+                            },
+                            child: StoreItem(
+                              storeCubit.stores[index],
+                            ),
                           ),
                           scrollDirection: Axis.horizontal,
                           itemCount: storeCubit.stores.length,

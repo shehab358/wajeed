@@ -30,11 +30,14 @@ class FetchAllProductsCubit extends Cubit<FetchAllProductsStates> {
           failure.message,
         ),
       ),
-      (r) => emit(
-        FetchAllProductsSuccess(
-          r = products,
-        ),
-      ),
+      (r) {
+        products = r; // تحديث القائمة بالبيانات المسترجعة
+        emit(
+          FetchAllProductsSuccess(
+            products,
+          ),
+        );
+      },
     );
   }
 }
