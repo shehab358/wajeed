@@ -1,12 +1,9 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wajeed/core/di/service_locator.dart';
-import 'package:wajeed/core/image_functions.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
@@ -15,9 +12,14 @@ import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
+import 'package:wajeed/features/category/domain/entities/category.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_states.dart';
 import 'package:wajeed/features/product/data/models/product_models.dart';
-import 'package:wajeed/features/product/presentation/cubit/product_cubit.dart';
-import 'package:wajeed/features/product/presentation/cubit/product_states.dart';
+import 'package:wajeed/features/product/presentation/cubit/add_product_cubit/add_product_cubit.dart';
+import 'package:wajeed/features/product/presentation/cubit/add_product_cubit/add_product_states.dart';
+import 'package:wajeed/features/product/presentation/widgets/category_drop_down_button.dart';
+import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
 
 class AddProductWidget extends StatefulWidget {
   const AddProductWidget({super.key});
@@ -28,13 +30,24 @@ class AddProductWidget extends StatefulWidget {
 
 class _AddProductWidgetState extends State<AddProductWidget> {
   final TextEditingController _productName = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _barcodeController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _priceBeforeController = TextEditingController();
-  final ProductCubit _productCubit = serviceLocator.get<ProductCubit>();
+  final AddProductCubit _productCubit = serviceLocator.get<AddProductCubit>();
+  final FetchUserCategoriesCubit _fetchUserCategoriesCubit =
+      serviceLocator.get<FetchUserCategoriesCubit>();
+  final StoreGetCubit _storeGetCubit = serviceLocator.get<StoreGetCubit>();
+  Category? selectedCategory; // Store selected category
 
-  File? imageFile;
+  @override
+  void initState() {
+    super.initState();
+    _storeGetCubit.getStore();
+    // final storeId = _storeGetCubit.userStore?.id;
+    // if (storeId != null) {
+    //   _fetchUserCategoriesCubit.fetchUserCategories(storeId);
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,40 +64,23 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                 height: 16.h,
               ),
               Center(
-                child: GestureDetector(
-                  onTap: () async {
-                    File? temp = await ImageFunctions.galleryImage();
-                    if (temp != null) {
-                      setState(() {
-                        imageFile = temp;
-                      });
-                    } else {
-                      log('No image selected');
-                    }
-                    log(
-                      'Pressed',
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50.r,
-                        backgroundImage: imageFile == null
-                            ? AssetImage(IconsAssets.fastfood)
-                            : FileImage(imageFile!),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50.r,
+                      backgroundImage: AssetImage(ImageAssets.food),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      'Add Image',
+                      style: getMediumStyle(
+                        color: ColorManager.black,
+                        fontSize: FontSize.s14,
                       ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Text(
-                        'Add Image',
-                        style: getMediumStyle(
-                          color: ColorManager.black,
-                          fontSize: FontSize.s14,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Text('Enter Product Name'),
@@ -95,10 +91,11 @@ class _AddProductWidgetState extends State<AddProductWidget> {
               SizedBox(
                 height: 20.h,
               ),
-              Text('Enter Category Name'),
-              CustomTextField(
-                hint: 'Category Name',
-                controller: _categoryController,
+              Text('Chose Category'),
+              CategoryDropdown(
+                onCategorySelected: (Category category) {
+                  selectedCategory = category;
+                },
               ),
               SizedBox(
                 height: 20.h,
@@ -133,38 +130,65 @@ class _AddProductWidgetState extends State<AddProductWidget> {
               SizedBox(
                 height: 20.h,
               ),
-              BlocListener<ProductCubit, ProductState>(
-                listener: (context, state) {
-                  if (state is ProductAddLoading) {
-                    UIUtils.showLoading(context);
-                  } else if (state is ProductAddError) {
-                    UIUtils.hideLoading(context);
-                    UIUtils.showMessage(state.message);
-                  } else if (state is ProductAddSuccess) {
-                    UIUtils.hideLoading(context);
-                    _productCubit.fetchProducts();
-                    Navigator.pop(context);
-                  }
-                },
-                child: CustomElevatedButton(
-                  label: 'Add',
-                  onTap: () {
-                    final barcode = int.parse(_barcodeController.text);
-                    final price = double.parse(_priceController.text);
-                    final priceBefore =
-                        double.parse(_priceBeforeController.text);
-                    _productCubit.addProduct(
-                      ProductModel(
-                        FirebaseAuth.instance.currentUser!.uid,
-                        imageFile: imageFile,
-                        name: _productName.text,
-                        category: _categoryController.text,
-                        barcode: barcode,
-                        price: price,
-                        discount: priceBefore,
-                      ),
-                    );
+              MultiBlocListener(
+                listeners: [
+                  BlocListener<FetchUserCategoriesCubit,
+                      FetchUserCategoriesStates>(
+                    listener: (context, state) {
+                      if (state is FetchUserCategoriesCubitLoading) {
+                        UIUtils.showLoading(context);
+                      }
+                      if (state is FetchUserCategoriesCubitSuccess &&
+                          state.categories.isNotEmpty) {
+                        setState(() {
+                          selectedCategory = state.categories.first;
+                        });
+                        UIUtils.hideLoading(context);
+                      } else if (state is FetchUserCategoriesCubitErrorr) {
+                        UIUtils.hideLoading(context);
+                        UIUtils.showMessage(state.message);
+                      }
+                    },
+                  ),
+                ],
+                child: BlocListener<AddProductCubit, AddProductStates>(
+                  listener: (context, state) {
+                    if (state is ProductAddLoading) {
+                      UIUtils.showLoading(context);
+                    } else if (state is ProductAddError) {
+                      UIUtils.hideLoading(context);
+                      UIUtils.showMessage(state.message);
+                    } else if (state is ProductAddSuccess) {
+                      UIUtils.hideLoading(context);
+                    }
                   },
+                  child: CustomElevatedButton(
+                    label: 'Add',
+                    onTap: () {
+                      log(selectedCategory!.id);
+                      log(selectedCategory!.name);
+                      final barcode = int.parse(_barcodeController.text);
+                      final price = double.parse(_priceController.text);
+                      final priceBefore =
+                          double.parse(_priceBeforeController.text);
+                      if (selectedCategory == null) {
+                        UIUtils.showMessage('Please select a category first');
+                        return;
+                      }
+                      _productCubit.addProduct(
+                        ProductModel(
+                          name: _productName.text,
+                          category: selectedCategory! ,
+                          barcode: barcode,
+                          price: price,
+                          discount: priceBefore,
+                          id: '',
+                        ),
+                        _storeGetCubit.userStore!.id,
+                        selectedCategory!.id,
+                      );
+                    },
+                  ),
                 ),
               ),
               SizedBox(

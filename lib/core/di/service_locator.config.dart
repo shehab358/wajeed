@@ -33,8 +33,10 @@ import 'package:wajeed/features/auth/domain/use_case.dart/reset_password.dart'
     as _i824;
 import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart'
     as _i11;
-import 'package:wajeed/features/category/data/data_source/category_remote_data_soucre.dart';
-import 'package:wajeed/features/category/data/repository.dart/category_repository_impl.dart';
+import 'package:wajeed/features/category/data/data_source/category_remote_data_soucre.dart'
+    as _i786;
+import 'package:wajeed/features/category/data/repository/category_repository_impl.dart'
+    as _i356;
 import 'package:wajeed/features/category/domain/repository/category_repository.dart'
     as _i352;
 import 'package:wajeed/features/category/domain/use_case/add_category.dart'
@@ -74,10 +76,18 @@ import 'package:wajeed/features/product/domain/use_case/add_product.dart'
     as _i714;
 import 'package:wajeed/features/product/domain/use_case/delete_product.dart'
     as _i326;
-import 'package:wajeed/features/product/domain/use_case/fetch_products.dart'
-    as _i453;
-import 'package:wajeed/features/product/presentation/cubit/product_cubit.dart'
-    as _i558;
+import 'package:wajeed/features/product/domain/use_case/fetch_all_products.dart'
+    as _i312;
+import 'package:wajeed/features/product/domain/use_case/fetch_user_product.dart'
+    as _i727;
+import 'package:wajeed/features/product/presentation/cubit/add_product_cubit/add_product_cubit.dart'
+    as _i484;
+import 'package:wajeed/features/product/presentation/cubit/delete_product_cubit/delete_product_cubit.dart'
+    as _i669;
+import 'package:wajeed/features/product/presentation/cubit/fetch_all_products_cubit/fetch_all_products_cubit.dart'
+    as _i477;
+import 'package:wajeed/features/product/presentation/cubit/fetch_user_products_cubit/fetch_user_products_cubit.dart'
+    as _i417;
 import 'package:wajeed/features/store/data/data_source/store_remote_data_source.dart'
     as _i631;
 import 'package:wajeed/features/store/data/repository/stores_repository_impl.dart'
@@ -124,18 +134,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i342.HomeRepository>(() => _i670.HomeRepositoryImpl());
     gh.singleton<_i644.AuthLocalDataSource>(
         () => _i925.AuthSharedPrefDataSource(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i786.CategoryRemoteDataSource>(
+        () => _i786.CategoryFirebaseRemoteDataSource());
     gh.lazySingleton<_i587.ProductRemoteDataSource>(
         () => _i587.ProductFirebaseRemoteDataSource());
     gh.lazySingleton<_i631.StoreRemoteDataSource>(
         () => _i631.StoreFirebaseRemoteDataSource());
-    gh.lazySingleton<CategoryRemoteDataSource>(
-        () => CategoryFirebaseRemoteDataSource());
+    gh.lazySingleton<_i352.CategoryRepository>(() =>
+        _i356.CategoryRepositoryImpl(gh<_i786.CategoryRemoteDataSource>()));
     gh.lazySingleton<_i633.HomeLocalDataSource>(
         () => _i812.HomeSharedPrefDataSource());
     gh.lazySingleton<_i1036.HomeRemoteDataSource>(
         () => _i232.HomeApiRemoteDataSource());
-    gh.lazySingleton<_i352.CategoryRepository>(
-        () => CategoryRepositoryImpl(gh<CategoryRemoteDataSource>()));
     gh.singleton<_i464.AuthRemoteDataSource>(
         () => _i473.AuthFirebaseRemoteDataSource());
     gh.lazySingleton<_i334.AddCategory>(
@@ -172,8 +182,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i714.AddProduct(gh<_i94.ProductRepository>()));
     gh.lazySingleton<_i326.DeleteProduct>(
         () => _i326.DeleteProduct(gh<_i94.ProductRepository>()));
-    gh.lazySingleton<_i453.FetchProducts>(
-        () => _i453.FetchProducts(gh<_i94.ProductRepository>()));
+    gh.lazySingleton<_i312.FetchAllProducts>(
+        () => _i312.FetchAllProducts(gh<_i94.ProductRepository>()));
+    gh.lazySingleton<_i727.FetchUserProducts>(
+        () => _i727.FetchUserProducts(gh<_i94.ProductRepository>()));
+    gh.lazySingleton<_i477.FetchAllProductsCubit>(
+        () => _i477.FetchAllProductsCubit(gh<_i312.FetchAllProducts>()));
+    gh.lazySingleton<_i669.DeleteProductCubit>(
+        () => _i669.DeleteProductCubit(gh<_i326.DeleteProduct>()));
+    gh.lazySingleton<_i484.AddProductCubit>(
+        () => _i484.AddProductCubit(gh<_i714.AddProduct>()));
     gh.lazySingleton<_i406.CreateStore>(
         () => _i406.CreateStore(gh<_i636.StoreRepository>()));
     gh.lazySingleton<_i21.DeleteStore>(
@@ -186,16 +204,13 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i369.UpdateStore(gh<_i636.StoreRepository>()));
     gh.lazySingleton<_i348.StoreGetCubit>(
         () => _i348.StoreGetCubit(gh<_i207.GetStore>()));
+    gh.lazySingleton<_i417.FetchUserProductsCubit>(
+        () => _i417.FetchUserProductsCubit(gh<_i727.FetchUserProducts>()));
     gh.singleton<_i11.AuthCubit>(() => _i11.AuthCubit(
           gh<_i307.Register>(),
           gh<_i383.Login>(),
           gh<_i202.Logout>(),
           gh<_i824.ResetPassword>(),
-        ));
-    gh.lazySingleton<_i558.ProductCubit>(() => _i558.ProductCubit(
-          gh<_i714.AddProduct>(),
-          gh<_i453.FetchProducts>(),
-          gh<_i326.DeleteProduct>(),
         ));
     gh.lazySingleton<_i938.CreateStoreCubit>(
         () => _i938.CreateStoreCubit(gh<_i406.CreateStore>()));

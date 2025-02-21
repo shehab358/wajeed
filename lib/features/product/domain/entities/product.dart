@@ -1,19 +1,16 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
+import 'package:wajeed/features/category/domain/entities/category.dart';
 
 // ignore: must_be_immutable
 class Product extends Equatable {
   String id;
-  final File? imageFile;
   final String name;
-  final String category;
+  final Category category;
   final int barcode;
   final double price;
   final double? discount;
-  Product(
-    this.id, {
-    required this.imageFile,
+  Product({
+    this.id = '',
     required this.name,
     required this.category,
     required this.barcode,
@@ -25,7 +22,6 @@ class Product extends Equatable {
   // TODO: implement props
   List<Object?> get props => [
         id,
-        imageFile,
         name,
         category,
         barcode,

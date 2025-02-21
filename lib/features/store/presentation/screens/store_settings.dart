@@ -13,7 +13,6 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
-import 'package:wajeed/core/routes/routes.dart';
 import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';

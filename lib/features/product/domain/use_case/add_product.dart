@@ -12,9 +12,13 @@ class AddProduct {
 
   Future<Either<Failure, void>> call(
     ProductModel product,
+    String storeId,
+    String categoryId,
   ) async {
     return await repository.addProducts(
       product,
+      storeId,
+      categoryId,
     );
   }
 }
