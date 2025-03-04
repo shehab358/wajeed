@@ -5,6 +5,7 @@ import 'package:wajeed/features/auth/presentation/screens/login_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/privacy_policy.dart';
 import 'package:wajeed/features/auth/presentation/screens/register_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/select_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/basket_tab.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/store.dart';
 import 'package:wajeed/features/store/presentation/screens/availability.dart';
 import 'package:wajeed/features/store/presentation/screens/create_store.dart';
@@ -80,6 +81,11 @@ class RouteGenerator {
       case Routes.store:
         return MaterialPageRoute(
           builder: (_) => CustomerStore(),
+          settings: settings,
+        );
+      case Routes.basket:
+        return MaterialPageRoute(
+          builder: (_) => BasketTab(),
           settings: settings,
         );
 

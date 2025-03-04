@@ -148,19 +148,15 @@ class CategoryFirebaseRemoteDataSource implements CategoryRemoteDataSource {
         throw RemoteException('User not logged in');
       }
 
-      // إنشاء ID مشترك للوثيقتين
       final String newCategoryId =
           getAllStoresCategoriesCollection(storeId).doc().id;
 
-      // تحديث النموذج ليحتوي على نفس الـ ID
       categoryModel = categoryModel.copyWith(id: newCategoryId);
 
-      // إضافة إلى جميع الفئات في المتجر
       await getAllStoresCategoriesCollection(storeId)
           .doc(newCategoryId)
           .set(categoryModel);
 
-      // إضافة إلى فئات المتجر الخاصة بالمستخدم
       await getUserStoresCategoriesCollection(userId, storeId)
           .doc(newCategoryId)
           .set(categoryModel);

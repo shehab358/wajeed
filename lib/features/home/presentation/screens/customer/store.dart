@@ -10,9 +10,10 @@ import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_all_categories_cubit/fetch_all_categories_cubit.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/store_product_item.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/view_basket_widget.dart';
 import 'package:wajeed/features/product/presentation/cubit/fetch_all_products_cubit/fetch_all_products_cubit.dart';
 import 'package:wajeed/features/product/presentation/cubit/fetch_all_products_cubit/fetch_all_products_states.dart';
-import 'package:wajeed/features/product/presentation/widgets/product_item.dart';
 import 'package:wajeed/features/store/domain/entities/store.dart';
 
 import '../../../../category/domain/entities/category.dart';
@@ -61,6 +62,7 @@ class _CustomerStoreState extends State<CustomerStore> {
     final store = ModalRoute.of(context)!.settings.arguments as Store;
 
     return Scaffold(
+      bottomNavigationBar: ViewBasketWidget(),
       appBar: AppBar(
         title: Text(store.name),
         centerTitle: true,
@@ -198,8 +200,10 @@ class _CustomerStoreState extends State<CustomerStore> {
 
                       return ListView.builder(
                         itemCount: _productCubit.products.length,
-                        itemBuilder: (context, index) => ProductItem(
+                        itemBuilder: (context, index) => StoreProductItem(
                           _productCubit.products[index],
+                          storeId: store.id,
+                          ownerId: store.userId,
                         ),
                       );
                     } else {

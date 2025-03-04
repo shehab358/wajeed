@@ -6,18 +6,26 @@ import 'package:wajeed/features/home/presentation/screens/customer/home_tab.dart
 import 'package:wajeed/features/home/presentation/screens/customer/sales_tab.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final int initialIndex;
+
+  const HomeScreen({super.key, this.initialIndex = 0});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex = 0;
+  late int currentIndex;
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.initialIndex;
+  }
+
   List<Widget> tabs = [
     const HomeTab(),
     const SalesTab(),
-    const BasketTab(),
+     BasketTab(),
   ];
   void onTabSelected(int index) {
     setState(() {

@@ -14,6 +14,7 @@ import 'package:wajeed/features/category/presentation/cubit/add_category_cubit/a
 import 'package:wajeed/features/category/presentation/cubit/delete_category_c/delete_category_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_all_categories_cubit/fetch_all_categories_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
+import 'package:wajeed/features/home/presentation/cubit/basket_cubit.dart';
 import 'package:wajeed/features/product/presentation/cubit/add_product_cubit/add_product_cubit.dart';
 import 'package:wajeed/features/product/presentation/cubit/fetch_all_products_cubit/fetch_all_products_cubit.dart';
 import 'package:wajeed/features/product/presentation/cubit/fetch_user_products_cubit/fetch_user_products_cubit.dart';
@@ -106,6 +107,9 @@ class WajedApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => serviceLocator.get<FetchAllProductsCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator.get<BasketCubit>(),
         ),
       ],
       child: ScreenUtilInit(

@@ -12,6 +12,7 @@ class Routes {
   static const String forgetPassword = '/forget';
   static const String walkthorough = '/walkthorough';
   static const String privacy = '/privacy';
+  static const String basket = '/basket';
 
 
 }
