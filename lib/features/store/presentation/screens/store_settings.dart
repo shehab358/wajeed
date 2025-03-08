@@ -17,11 +17,9 @@ import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/core/widgets/drop_button.dart';
-import 'package:wajeed/core/widgets/error_indicator.dart';
-import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/store/data/models/store_model.dart';
+import 'package:wajeed/features/store/domain/entities/store.dart';
 import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_states.dart';
 import 'package:wajeed/features/store/presentation/cubit/update_store_cubit/update_store_cubit.dart';
 import 'package:wajeed/features/store/presentation/cubit/update_store_cubit/update_store_states.dart';
 
@@ -108,11 +106,18 @@ class _StoreSettingsState extends State<StoreSettings> {
   @override
   void initState() {
     super.initState();
-    _getStoreCubit.getStore();
   }
 
   @override
   Widget build(BuildContext context) {
+    final store = ModalRoute.of(context)!.settings.arguments as Store;
+    nameController.text = store.name;
+    taglineController.text = store.tagline;
+    addressController.text = store.address;
+    minOrderController.text = store.minimumOrderCost.toString();
+    selectedCity = store.city;
+    selectedPaymentMethod = store.paymentMethod;
+    selectedCategory = store.category;
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: AppBar(
@@ -132,214 +137,192 @@ class _StoreSettingsState extends State<StoreSettings> {
           horizontal: Insets.s20.w,
         ),
         child: SingleChildScrollView(
-          child: BlocBuilder<StoreGetCubit, StoreGetStates>(
-            builder: (context, state) {
-              if (state is StoreGetLoading) {
-                return LoadingIndicator();
-              } else if (state is StoreGetError) {
-                return ErrorIndicator(state.message);
-              } else if (state is StoreGetSuccess) {
-                final store = state.store;
-                nameController.text = store.name;
-                taglineController.text = store.tagline;
-                addressController.text = store.address;
-                minOrderController.text = store.minimumOrderCost.toString();
-                selectedCity = store.city;
-                selectedPaymentMethod = store.paymentMethod;
-                selectedCategory = store.category;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Column(
                   children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              File? temp = await ImageFunctions.galleryImage();
-                              if (temp != null) {
-                                setState(() {
-                                  imageFile = temp;
-                                });
-                              } else {
-                                log('No image selected');
-                              }
-                              log(
-                                'Pressed',
-                              );
-                            },
-                            child: CircleAvatar(
-                              radius: 35.r,
-                              backgroundImage: imageFile == null
-                                  ? AssetImage(ImageAssets.user)
-                                  : FileImage(imageFile!),
-                            ),
-                          ),
-                          SizedBox(height: Insets.s16.h),
-                          Text(
-                            'Update Store Logo',
-                            style: getRegularStyle(
-                              color: ColorManager.black,
-                              fontSize: FontSize.s14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Name',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomTextField(
-                      controller: nameController,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Tagline',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomTextField(
-                      controller: taglineController,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'City',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomDropButton(
-                      hint: 'Select City',
-                      selectedValue: selectedCity,
-                      onCategorySelected: (selectid) {
-                        setState(() {
-                          selectedCity = selectid;
-                        });
-                      },
-                      categories: egyptGovernorates,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Address',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomTextField(
-                      controller: addressController,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Location',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomTextField(
-                      controller: locationController,
-                      prefixIcon: Icon(
-                        Icons.location_pin,
-                      ),
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Minimum Order cost',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomTextField(
-                      controller: minOrderController,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Payment Method',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomDropButton(
-                      hint: 'Select Payment Method',
-                      selectedValue: selectedPaymentMethod,
-                      onCategorySelected: (selectedId) {
-                        setState(() {
-                          selectedPaymentMethod = selectedId;
-                        });
-                      },
-                      categories: paymentMethods,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    Text(
-                      'Category',
-                      style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                    CustomDropButton(
-                      hint: 'Select Category',
-                      selectedValue: selectedCategory,
-                      onCategorySelected: (selectedId) {
-                        setState(() {
-                          selectedCategory = selectedId;
-                        });
-                      },
-                      categories: categories,
-                    ),
-                    SizedBox(height: Insets.s16.h),
-                    BlocListener<UpdateStoreCubit, UpdateStoreStates>(
-                      listener: (context, state) async {
-                        if (state is StoreUpdateLoading) {
-                        } else if (state is StoreUpdateError) {
-                          UIUtils.showMessage(state.message);
-                        } else if (state is StoreUpdateSuccess) {
-                          UIUtils.hideLoading(context);
-                          UIUtils.showMessage(
-                            'Store Updated Successfully',
-                          );
+                    GestureDetector(
+                      onTap: () async {
+                        File? temp = await ImageFunctions.galleryImage();
+                        if (temp != null) {
+                          setState(() {
+                            imageFile = temp;
+                          });
+                        } else {
+                          log('No image selected');
                         }
+                        log(
+                          'Pressed',
+                        );
                       },
-                      child: CustomElevatedButton(
-                        backgroundColor: ColorManager.starRate,
-                        label: 'Save',
-                        onTap: () async {
-                          await _updateStoreCubit.updateStore(
-                            StoreModel(
-                              name: nameController.text,
-                              userId: UserId.id,
-                              id: store.id,
-                              tagline: taglineController.text,
-                              city: selectedCity!,
-                              address: addressController.text,
-                              minimumOrderCost:
-                                  double.parse(minOrderController.text),
-                              paymentMethod: selectedPaymentMethod!,
-                              category: selectedCategory!,
-                            ),
-                            UserId.id,
-                          );
-                          await _getStoreCubit.getStore();
-                        },
+                      child: CircleAvatar(
+                        radius: 35.r,
+                        backgroundImage: imageFile == null
+                            ? AssetImage(ImageAssets.user)
+                            : FileImage(imageFile!),
+                      ),
+                    ),
+                    SizedBox(height: Insets.s16.h),
+                    Text(
+                      'Update Store Logo',
+                      style: getRegularStyle(
+                        color: ColorManager.black,
+                        fontSize: FontSize.s14,
                       ),
                     ),
                   ],
-                );
-              } else {
-                return SizedBox();
-              }
-            },
+                ),
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Name',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomTextField(
+                controller: nameController,
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Tagline',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomTextField(
+                controller: taglineController,
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'City',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomDropButton(
+                hint: 'Select City',
+                selectedValue: selectedCity,
+                onCategorySelected: (selectid) {
+                  setState(() {
+                    selectedCity = selectid;
+                  });
+                },
+                categories: egyptGovernorates,
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Address',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomTextField(
+                controller: addressController,
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Location',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomTextField(
+                controller: locationController,
+                prefixIcon: Icon(
+                  Icons.location_pin,
+                ),
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Minimum Order cost',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomTextField(
+                controller: minOrderController,
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Payment Method',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomDropButton(
+                hint: 'Select Payment Method',
+                selectedValue: selectedPaymentMethod,
+                onCategorySelected: (selectedId) {
+                  setState(() {
+                    selectedPaymentMethod = selectedId;
+                  });
+                },
+                categories: paymentMethods,
+              ),
+              SizedBox(height: Insets.s16.h),
+              Text(
+                'Category',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              CustomDropButton(
+                hint: 'Select Category',
+                selectedValue: selectedCategory,
+                onCategorySelected: (selectedId) {
+                  setState(() {
+                    selectedCategory = selectedId;
+                  });
+                },
+                categories: categories,
+              ),
+              SizedBox(height: Insets.s16.h),
+              BlocListener<UpdateStoreCubit, UpdateStoreStates>(
+                listener: (context, state) async {
+                  if (state is StoreUpdateLoading) {
+                  } else if (state is StoreUpdateError) {
+                    UIUtils.showMessage(state.message);
+                  } else if (state is StoreUpdateSuccess) {
+                    UIUtils.hideLoading(context);
+                    UIUtils.showMessage(
+                      'Store Updated Successfully',
+                    );
+                  }
+                },
+                child: CustomElevatedButton(
+                  backgroundColor: ColorManager.starRate,
+                  label: 'Save',
+                  onTap: () async {
+                    await _updateStoreCubit.updateStore(
+                      StoreModel(
+                        name: nameController.text,
+                        userId: UserId.id,
+                        id: store.id,
+                        tagline: taglineController.text,
+                        city: selectedCity!,
+                        address: addressController.text,
+                        minimumOrderCost: double.parse(minOrderController.text),
+                        paymentMethod: selectedPaymentMethod!,
+                        category: selectedCategory!,
+                      ),
+                      UserId.id,
+                    );
+                    await _getStoreCubit.getStore();
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

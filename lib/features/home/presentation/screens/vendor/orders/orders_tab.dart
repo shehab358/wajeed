@@ -9,7 +9,8 @@ import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order_hi
 import 'package:wajeed/features/home/presentation/widgets/vendor/orders/preparing_order/preparing_order_tab.dart';
 
 class OrdersTab extends StatefulWidget {
-  const OrdersTab({super.key});
+  final String storeId;
+  const OrdersTab({super.key, required this.storeId});
 
   @override
   State<OrdersTab> createState() => _OrdersTabState();
@@ -75,7 +76,9 @@ class _OrdersTabState extends State<OrdersTab> {
                     });
                   },
                   children: [
-                    NewOrderTab(),
+                    NewOrderTab(
+                      storeId: widget.storeId,
+                    ),
                     PreparingOrderTab(),
                     OrderHistoryTab(),
                   ],

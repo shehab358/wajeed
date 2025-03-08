@@ -9,7 +9,6 @@ class FetchUserCategoriesCubit extends Cubit<FetchUserCategoriesStates> {
   FetchUserCategoriesCubit(this._fetchUserCategories)
       : super(FetchUserCategoriesCubitInitial());
   final FetchUserCategories _fetchUserCategories;
-  List<Category> categories = [];
 
   Future<void> fetchUserCategories(String storeId) async {
     emit(FetchUserCategoriesCubitLoading());
@@ -22,7 +21,7 @@ class FetchUserCategoriesCubit extends Cubit<FetchUserCategoriesStates> {
       ),
       (r) => emit(
         FetchUserCategoriesCubitSuccess(
-          categories = r,
+          r,
         ),
       ),
     );

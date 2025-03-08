@@ -7,7 +7,8 @@ import 'package:wajeed/core/resources/values_manager.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField(
-      {super.key, this.controller,
+      {super.key,
+      this.controller,
       this.focusNode,
       this.nextFocus,
       this.label,

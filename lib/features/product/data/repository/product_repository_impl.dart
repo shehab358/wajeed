@@ -93,7 +93,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, List<Product>>> fetchUserProducts(
- String storeId, String categoryId) async {
+      String storeId, String categoryId) async {
     try {
       final productModel = await productRemoteDataSource.fetchUserProducts(
         storeId,

@@ -8,14 +8,6 @@ class PreparingOrderTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 1,
-      itemBuilder: (context, index) => Order(
-        prepare: 'Preparing',
-        buttonText: 'Mark as Ready',
-        buttonColor: ColorManager.primary,
-        buttonTextColor: ColorManager.black,
-        isPreparing: true,
-      ),
-    );
+        itemCount: 1, itemBuilder: (context, index) => SizedBox());
   }
 }

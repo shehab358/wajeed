@@ -239,7 +239,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   if (state is RegisterLoading) {
                                     UIUtils.showLoading(context);
                                   } else if (state is RegisterSuccess) {
-                                    
                                     UIUtils.hideLoading(context);
 
                                     final bool isWalkedthrough = serviceLocator

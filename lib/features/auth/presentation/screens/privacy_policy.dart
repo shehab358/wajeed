@@ -12,7 +12,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Privacy Policy',
-          style: getBoldStyle(color: ColorManager.black, fontSize: FontSize.s20),
+          style:
+              getBoldStyle(color: ColorManager.black, fontSize: FontSize.s20),
         ),
         centerTitle: true,
       ),

@@ -7,25 +7,19 @@ import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
 import 'package:wajeed/features/home/presentation/widgets/vendor/orders/new_order/order_bottom_sheet.dart';
+import 'package:wajeed/features/orders/domain/entities/order.dart';
 
-class Order extends StatelessWidget {
-  final String prepare;
-  final String buttonText;
-  final Color buttonColor;
-  final Color buttonTextColor;
-  final bool isPreparing;
-
-  const Order({
+class OrderItem extends StatelessWidget {
+  final ORder order;
+  const OrderItem({
     super.key,
-    required this.prepare,
-    required this.buttonText,
-    required this.buttonColor,
-    required this.buttonTextColor,
-    required this.isPreparing,
+    required this.order,
   });
 
   @override
   Widget build(BuildContext context) {
+    DateTime createdAt = (order.createdAt).toDate();
+
     return SizedBox(
       height: 310.h,
       width: double.infinity,
@@ -43,7 +37,7 @@ class Order extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Order ID: 123456',
+                    order.orderId,
                     style:
                         TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
@@ -57,7 +51,7 @@ class Order extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        prepare,
+                        '$createdAt',
                         style: getMediumStyle(color: ColorManager.starRate)
                             .copyWith(fontSize: FontSize.s14),
                       ),
@@ -69,7 +63,7 @@ class Order extends StatelessWidget {
                 height: Insets.s5.h,
               ),
               Text(
-                '05:40 PM',
+                '${order.createdAt} ',
                 style: getMediumStyle(color: ColorManager.black)
                     .copyWith(fontSize: FontSize.s12),
               ),
@@ -96,13 +90,13 @@ class Order extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'SAR 200.00',
+                    'SAR${order.total}',
                     style: getBoldStyle(color: ColorManager.black)
                         .copyWith(fontSize: FontSize.s16),
                   ),
                   Spacer(),
                   Text(
-                    '4 items',
+                    order.products.length.toString() + ' items',
                     style: getMediumStyle(color: ColorManager.black).copyWith(
                       fontSize: FontSize.s12,
                     ),
@@ -113,31 +107,29 @@ class Order extends StatelessWidget {
                 height: Insets.s16.h,
               ),
               CustomElevatedButton(
-                label: buttonText,
-                textStyle: getBoldStyle(color: buttonTextColor).copyWith(
+                label: 'Mark as preparing',
+                textStyle: getBoldStyle(color: ColorManager.black).copyWith(
                   fontSize: FontSize.s18,
                 ),
                 onTap: () {
-                  isPreparing ? () {} : _showFilter(context);
+                  // isPreparing ? () {} : _showFilter(context);
                 },
-                backgroundColor: buttonColor,
+                backgroundColor: ColorManager.black,
               ),
-              isPreparing
-                  ? TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'view order',
-                          ),
-                          Icon(
-                            Icons.arrow_forward_sharp,
-                          ),
-                        ],
-                      ),
-                    )
-                  : SizedBox(),
+              TextButton(
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'view order',
+                    ),
+                    Icon(
+                      Icons.arrow_forward_sharp,
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),

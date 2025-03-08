@@ -1,3 +1,1 @@
-abstract class HomeLocalDataSource {
-  
-}
+abstract class HomeLocalDataSource {}

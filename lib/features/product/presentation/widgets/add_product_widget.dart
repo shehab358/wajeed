@@ -36,7 +36,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
   final AddProductCubit _productCubit = serviceLocator.get<AddProductCubit>();
 
   final StoreGetCubit _storeGetCubit = serviceLocator.get<StoreGetCubit>();
-  Category? selectedCategory; 
+  Category? selectedCategory;
 
   @override
   void initState() {

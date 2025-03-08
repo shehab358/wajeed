@@ -15,7 +15,7 @@ class ORder extends Equatable {
   ORder({
     this.orderId = '',
     required this.storeId,
-    this.status = 'waiting', 
+    this.status = 'waiting',
     required this.products,
     required this.total,
     required this.createdAt,

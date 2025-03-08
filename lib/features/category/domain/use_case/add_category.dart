@@ -11,12 +11,7 @@ class AddCategory {
   AddCategory(this.repository);
 
   Future<Either<Failure, void>> call(
-    CategoryModel category,
-    String storeId
-  ) async {
-    return await repository.addCategory(
-      category,
-      storeId
-    );
+      CategoryModel category, String storeId) async {
+    return await repository.addCategory(category, storeId);
   }
 }

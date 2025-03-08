@@ -10,7 +10,8 @@ class CustomSlider extends StatelessWidget {
   final int currentIndex;
   final Timer timer;
 
-  const CustomSlider({super.key, 
+  const CustomSlider({
+    super.key,
     required this.imagesPaths,
     required this.currentIndex,
     required this.timer,

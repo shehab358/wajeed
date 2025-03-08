@@ -115,7 +115,7 @@ class _RatingScreenState extends State<RatingScreen> {
               itemBuilder: (context, index) => Rating(),
               itemCount: 6,
               separatorBuilder: (context, index) => Padding(
-                padding:  EdgeInsets.symmetric(horizontal: Insets.s18.w),
+                padding: EdgeInsets.symmetric(horizontal: Insets.s18.w),
                 child: Divider(),
               ),
             ),

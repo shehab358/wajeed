@@ -72,16 +72,15 @@ import 'package:wajeed/features/orders/data/repository/order_repository_impl.dar
     as _i579;
 import 'package:wajeed/features/orders/domain/repository/order_repository.dart'
     as _i332;
+import 'package:wajeed/features/orders/domain/repository/order_repository.dart';
 import 'package:wajeed/features/orders/domain/use_case/create_order.dart'
     as _i107;
 import 'package:wajeed/features/orders/domain/use_case/fetch_user_orders.dart'
     as _i902;
-import 'package:wajeed/features/orders/domain/use_case/fetch_user_store_orders.dart'
-    as _i381;
+import 'package:wajeed/features/orders/domain/use_case/fetch_user_store_orders.dart';
 import 'package:wajeed/features/orders/presentation/cubit/create_oredr_cubit/create_order_cubit.dart'
     as _i900;
-import 'package:wajeed/features/orders/presentation/cubit/fetch_store_orders_cubit/fetch_store_orders_cubit.dart'
-    as _i399;
+import 'package:wajeed/features/orders/presentation/cubit/fetch_store_orders_cubit/fetch_store_orders_cubit.dart';
 import 'package:wajeed/features/orders/presentation/cubit/fetch_user_orders_cubit/fetch_user_orders_cubit.dart'
     as _i74;
 import 'package:wajeed/features/product/data/data_source/product_remote_data_source.dart'
@@ -182,8 +181,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i464.AuthRemoteDataSource>(),
           gh<_i644.AuthLocalDataSource>(),
         ));
-    gh.lazySingleton<_i399.FetchStoreOrdersCubit>(
-        () => _i399.FetchStoreOrdersCubit(gh<_i381.FetchUserStoreOrders>()));
+    gh.lazySingleton<FetchUserStoreOrders>(
+        () => FetchUserStoreOrders(gh<OrderRepository>()));
     gh.lazySingleton<_i332.OrderRepository>(
         () => _i579.OrderRepositoryImpl(gh<_i125.OrderRemoteDataSource>()));
     gh.lazySingleton<_i94.ProductRepository>(
@@ -212,6 +211,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i727.FetchUserProducts(gh<_i94.ProductRepository>()));
     gh.lazySingleton<_i477.FetchAllProductsCubit>(
         () => _i477.FetchAllProductsCubit(gh<_i312.FetchAllProducts>()));
+    gh.lazySingleton<FetchStoreOrdersCubit>(
+        () => FetchStoreOrdersCubit(gh<FetchUserStoreOrders>()));
     gh.lazySingleton<_i107.CreateOrder>(
         () => _i107.CreateOrder(gh<_i332.OrderRepository>()));
     gh.lazySingleton<_i902.FetchUserOrders>(

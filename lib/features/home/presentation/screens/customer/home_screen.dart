@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> tabs = [
     const HomeTab(),
     const SalesTab(),
-     BasketTab(),
+    BasketTab(),
   ];
   void onTabSelected(int index) {
     setState(() {

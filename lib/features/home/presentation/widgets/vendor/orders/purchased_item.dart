@@ -37,8 +37,8 @@ class PurchasedItem extends StatelessWidget {
           Spacer(),
           Text(
             'SAR 10.00',
-            style: getBoldStyle(
-                color: ColorManager.black, fontSize: FontSize.s16),
+            style:
+                getBoldStyle(color: ColorManager.black, fontSize: FontSize.s16),
           ),
         ],
       ),

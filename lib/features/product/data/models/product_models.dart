@@ -25,7 +25,7 @@ class ProductModel extends Product {
       };
   ProductModel.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'],
+          id: json['id'] ?? '',
           name: json['name'],
           category: Category(
             json['category']['id'],

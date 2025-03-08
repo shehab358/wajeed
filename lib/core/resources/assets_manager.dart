@@ -13,6 +13,7 @@ class ImageAssets {
   static const String password = '$_imagePath/password.jpg';
   static const String user = '$_imagePath/user.png';
 }
+
 class SvgAssets {
   static const String _svgPath = 'assets/svg';
   static const String cash = '$_svgPath/cash.svg';
@@ -21,8 +22,8 @@ class SvgAssets {
   static const String rate = '$_svgPath/rate.svg';
   static const String contact = '$_svgPath/contact.svg';
   static const String language = '$_svgPath/language.svg';
-
 }
+
 class IconsAssets {
   static const String _iconsPath = 'assets/icons';
   static const String delivery = '$_iconsPath/delivery.png';

@@ -7,14 +7,14 @@ class CustomDropButton extends StatefulWidget {
   final void Function(String?) onCategorySelected;
   final List<dynamic> categories;
   final String hint;
-    final String? selectedValue; // Add selectedValue parameter
-
+  final String? selectedValue; // Add selectedValue parameter
 
   const CustomDropButton({
     super.key,
     required this.onCategorySelected,
     required this.categories,
-    required this.hint, this.selectedValue,
+    required this.hint,
+    this.selectedValue,
   });
 
   @override
@@ -27,7 +27,7 @@ class _CustomDropButtonState extends State<CustomDropButton> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    selectedCategoryId = widget.selectedValue; 
+    selectedCategoryId = widget.selectedValue;
   }
 
   @override

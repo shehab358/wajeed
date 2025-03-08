@@ -128,7 +128,7 @@ class _AvailabilityPageState extends State<AvailabilityPage> {
                                 ),
                               ),
                               Padding(
-                                padding:  EdgeInsets.only(top: 26.h),
+                                padding: EdgeInsets.only(top: 26.h),
                                 child: Switch(
                                   activeColor: ColorManager.white,
                                   activeTrackColor: ColorManager.green,

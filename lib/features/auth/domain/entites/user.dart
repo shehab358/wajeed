@@ -6,8 +6,7 @@ class USer extends Equatable {
   final String phone;
   final String role;
 
-  const USer(
-    {
+  const USer({
     required this.id,
     required this.name,
     required this.phone,

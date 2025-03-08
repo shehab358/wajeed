@@ -6,60 +6,42 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
-import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
+import 'package:wajeed/features/category/domain/entities/category.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_states.dart';
 import 'package:wajeed/features/category/presentation/widgets/add_category_widget.dart';
 import 'package:wajeed/features/category/presentation/widgets/category_item.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_states.dart';
 
 class CategoriesTab extends StatefulWidget {
-  const CategoriesTab({super.key});
+  final String storeId;
+  const CategoriesTab({super.key, required this.storeId});
 
   @override
   State<CategoriesTab> createState() => _CategoriesTabState();
 }
 
 class _CategoriesTabState extends State<CategoriesTab> {
-  final FetchUserCategoriesCubit _fetchUserCategoryCubit =
-      serviceLocator.get<FetchUserCategoriesCubit>();
-  final StoreGetCubit _storeCubit = serviceLocator.get<StoreGetCubit>();
+  // final FetchUserCategoriesCubit _fetchUserCategoryCubit =
+  //     serviceLocator.get<FetchUserCategoriesCubit>();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _storeCubit.getStore();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: Insets.s18.w,
-        ),
-        child: BlocListener<StoreGetCubit, StoreGetStates>(
-          listener: (context, state) {
-            if (state is StoreGetLoading) {
-              UIUtils.showLoading(context);
-            } else if (state is StoreGetError) {
-              UIUtils.hideLoading(context);
-              UIUtils.showMessage(state.message);
-            } else if (state is StoreGetSuccess) {
-              UIUtils.hideLoading(context);
-              if (_fetchUserCategoryCubit.categories.isEmpty) {
-                _fetchUserCategoryCubit.fetchUserCategories(
-                  state.store.id,
-                );
-              }
-            }
-          },
+    return BlocProvider(
+      create: (context) => serviceLocator.get<FetchUserCategoriesCubit>()
+        ..fetchUserCategories(widget.storeId),
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: Insets.s18.w,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -117,10 +99,16 @@ class _CategoriesTabState extends State<CategoriesTab> {
                     } else if (state is FetchUserCategoriesCubitErrorr) {
                       return ErrorIndicator(state.message);
                     } else if (state is FetchUserCategoriesCubitSuccess) {
+                      final List<Category> categories = state.categories;
+                      if (categories.isEmpty) {
+                        return const Center(
+                          child: Text('No categories found'),
+                        );
+                      }
                       return ListView.builder(
-                        itemCount: _fetchUserCategoryCubit.categories.length,
+                        itemCount: categories.length,
                         itemBuilder: (context, index) => CategoryItem(
-                          _fetchUserCategoryCubit.categories[index],
+                          categories[index],
                         ),
                       );
                     } else {
