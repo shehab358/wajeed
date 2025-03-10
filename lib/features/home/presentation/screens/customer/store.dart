@@ -80,7 +80,7 @@ class _CustomerStoreState extends State<CustomerStore> {
                       elevation: 5,
                       child: Image.asset(
                         ImageAssets.mcdonalds,
-                        width: 100,
+                        width: 75,
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -204,6 +204,7 @@ class _CustomerStoreState extends State<CustomerStore> {
                           _productCubit.products[index],
                           storeId: store.id,
                           ownerId: store.userId,
+                          storeName: store.name,
                         ),
                       );
                     } else {

@@ -154,7 +154,7 @@ class _OrderItemState extends State<OrderItem> {
               ),
               TextButton(
                 onPressed: () {
-                  _showFilter(context, widget.order);
+                  _showOrderBottomSheet(context, widget.order);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -175,7 +175,7 @@ class _OrderItemState extends State<OrderItem> {
     );
   }
 
-  void _showFilter(BuildContext context, ORder order) {
+  void _showOrderBottomSheet(BuildContext context, ORder order) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,

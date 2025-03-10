@@ -15,8 +15,14 @@ class StoreProductItem extends StatefulWidget {
   final Product product;
   final String storeId;
   final String ownerId;
-  const StoreProductItem(this.product,
-      {super.key, required this.storeId, required this.ownerId});
+  final String storeName;
+  const StoreProductItem(
+    this.product, {
+    super.key,
+    required this.storeId,
+    required this.ownerId,
+    required this.storeName,
+  });
 
   @override
   State<StoreProductItem> createState() => _StoreProductItemState();
@@ -84,6 +90,7 @@ class _StoreProductItemState extends State<StoreProductItem> {
                         product: widget.product,
                         storeId: widget.storeId,
                         ownerId: widget.ownerId,
+                        storeName: widget.storeName,
                       );
                 },
                 child: Container(

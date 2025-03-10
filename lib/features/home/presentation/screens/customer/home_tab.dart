@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wajeed/core/constants.dart';
 import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
@@ -13,15 +10,13 @@ import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/routes/routes.dart';
-import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
-import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:wajeed/features/auth/presentation/cubit/auth_states.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_slider.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/delivery_location_bottom_sheet.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/filter.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/profile.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/store_item.dart';
 import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_cubit.dart';
 import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_states.dart';
@@ -100,41 +95,19 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                       ],
                     ),
-                    BlocListener<AuthCubit, AuthState>(
-                      listener: (context, state) async {
-                        if (state is LogoutLoading) {
-                          UIUtils.showLoading(context);
-                        } else if (state is LogoutError) {
-                          UIUtils.hideLoading(context);
-                          UIUtils.showMessage(state.message);
-                        } else if (state is LogoutSuccess) {
-                          log('logout success');
-                          UIUtils.hideLoading(context);
-                          Navigator.pushReplacementNamed(
-                            context,
-                            Routes.login,
-                          );
-                          final sharedPref =
-                              serviceLocator.get<SharedPreferences>();
-                          await sharedPref.setBool(
-                              SharedPrefKeys.isLogged, false);
-                        }
-                        log(SharedPrefKeys.isLogged);
+                    GestureDetector(
+                      onTap: () {
+                        return _showProfile(context);
                       },
-                      child: GestureDetector(
-                        onTap: () {
-                          serviceLocator.get<AuthCubit>().logout();
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: ColorManager.primary,
-                          foregroundColor: ColorManager.black,
-                          child: Text(
-                            'H',
-                            style: getBoldStyle(
-                              color: ColorManager.black,
-                            ).copyWith(
-                              fontSize: FontSize.s18,
-                            ),
+                      child: CircleAvatar(
+                        backgroundColor: ColorManager.primary,
+                        foregroundColor: ColorManager.black,
+                        child: Text(
+                          'H',
+                          style: getBoldStyle(
+                            color: ColorManager.black,
+                          ).copyWith(
+                            fontSize: FontSize.s18,
                           ),
                         ),
                       ),
@@ -281,6 +254,14 @@ class _HomeTabState extends State<HomeTab> {
         ),
       ),
     );
+  }
+
+  void _showProfile(BuildContext context) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => ProfilePage());
   }
 
   void _startImageSwitching() {

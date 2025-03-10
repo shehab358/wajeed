@@ -11,5 +11,6 @@ extension OrderMappers on OrderModel {
         customerId: customerId,
         duration: duration,
         orderId: orderId,
+        storeName: storeName
       );
 }

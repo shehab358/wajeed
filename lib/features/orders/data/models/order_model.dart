@@ -6,6 +6,7 @@ import 'package:wajeed/features/product/data/models/product_models.dart';
 class OrderModel extends ORder {
   OrderModel({
     super.orderId = '',
+    required super.storeName,
     super.status = 'waiting',
     super.duration = 20,
     required super.products,
@@ -19,6 +20,7 @@ class OrderModel extends ORder {
         'storeId': storeId,
         'status': status,
         'duration': duration,
+        'storeName': storeName,
         'products': {
           for (var product in products)
             product.id: {
@@ -39,6 +41,7 @@ class OrderModel extends ORder {
   OrderModel.fromJson(Map<String, dynamic> json)
       : this(
           orderId: json['orderId'],
+          storeName: json['storeName'],
           storeId: json['storeId'],
           status: json['status'],
           duration: json['duration'] ?? 20,
@@ -54,6 +57,7 @@ class OrderModel extends ORder {
   OrderModel copyWith({
     String? orderId,
     String? name,
+    String? storeName,
     String? storeId,
     String? status,
     List<ProductModel>? products,
@@ -63,6 +67,7 @@ class OrderModel extends ORder {
   }) {
     return OrderModel(
       orderId: orderId ?? this.orderId,
+      storeName: storeName ?? this.storeName,
       storeId: storeId ?? this.storeId,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,

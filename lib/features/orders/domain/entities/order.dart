@@ -12,10 +12,12 @@ class ORder extends Equatable {
   final double total;
   final Timestamp createdAt;
   final String customerId;
+  final String storeName;
 
   ORder({
     this.orderId = '',
     required this.storeId,
+    required this.storeName,
     this.status = 'waiting',
     this.duration = 20,
     required this.products,

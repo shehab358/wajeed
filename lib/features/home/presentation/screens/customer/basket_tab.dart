@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,34 +47,38 @@ class _BasketTabState extends State<BasketTab> {
                   },
                 ),
               ),
-              BlocListener<CreateOrderCubit, CreateOrderStates>(
-                bloc: _createOrderCubit,
-                listener: (context, state) {
-                  if (state is CreateOrderCubitLoading) {
-                    UIUtils.showLoading(context);
-                  } else if (state is CreateOrderCubitError) {
-                    UIUtils.hideLoading(context);
-                    UIUtils.showMessage(state.message);
-                  } else if (state is CreateOrderCubitSuccess) {}
-                },
-                child: ElevatedButton(
-                  onPressed: () {
-                    _createOrderCubit.createOrder(
-                      OrderModel(
-                        products: _basketCubit.basketProducts,
-                        total: totalPrice,
-                        createdAt: Timestamp.fromDate(DateTime.now()),
-                        customerId: UserId.id,
-                        storeId: _basketCubit.storeId,
-                      ),
-                      _basketCubit.storeId,
-                      _basketCubit.ownerId,
-                    );
-                    log(
-                      _basketCubit.ownerId,
-                    );
+              BlocProvider(
+                create: (context) => _createOrderCubit,
+                child: BlocListener<CreateOrderCubit, CreateOrderStates>(
+                  listener: (context, state) {
+                    if (state is CreateOrderCubitLoading) {
+                      UIUtils.showLoading(context);
+                    } else if (state is CreateOrderCubitError) {
+                      UIUtils.hideLoading(context);
+                      UIUtils.showMessage(state.message);
+                    } else if (state is CreateOrderCubitSuccess) {
+                      UIUtils.hideLoading(context);
+                      UIUtils.showMessage('Order created successfully');
+                      _basketCubit.clearBasket();
+                    }
                   },
-                  child: Text("Checkout"),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _createOrderCubit.createOrder(
+                        OrderModel(
+                          products: _basketCubit.basketProducts,
+                          total: totalPrice,
+                          createdAt: Timestamp.fromDate(DateTime.now()),
+                          customerId: UserId.id,
+                          storeId: _basketCubit.storeId,
+                          storeName: _basketCubit.storeName,
+                        ),
+                        _basketCubit.storeId,
+                        _basketCubit.ownerId,
+                      );
+                    },
+                    child: Text("Checkout"),
+                  ),
                 ),
               ),
             ],
