@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:wajeed/features/category/domain/entities/category.dart';
 import 'package:wajeed/features/category/domain/use_case/fetch_user_categories.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_states.dart';
 

@@ -4,9 +4,14 @@ import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
+import 'package:wajeed/features/product/domain/entities/product.dart';
 
 class PurchasedItem extends StatelessWidget {
-  const PurchasedItem({super.key});
+  final Product product;
+  const PurchasedItem({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,7 @@ class PurchasedItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '1X Pizza',
+                product.name,
                 style: getBoldStyle(
                     color: ColorManager.black, fontSize: FontSize.s16),
               ),
@@ -36,7 +41,7 @@ class PurchasedItem extends StatelessWidget {
           ),
           Spacer(),
           Text(
-            'SAR 10.00',
+            product.price.toString(),
             style:
                 getBoldStyle(color: ColorManager.black, fontSize: FontSize.s16),
           ),

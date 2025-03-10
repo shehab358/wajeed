@@ -6,9 +6,18 @@ import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
+import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order_bottom_sheet.dart';
+import 'package:wajeed/features/orders/domain/entities/order.dart';
+import 'package:intl/intl.dart';
 
 class HistoryOrder extends StatelessWidget {
-  const HistoryOrder({super.key});
+  final ORder order;
+  final String storeId;
+  const HistoryOrder({
+    super.key,
+    required this.order,
+    required this.storeId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,37 +37,12 @@ class HistoryOrder extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    'Order ID: 123456',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    width: 60.w,
-                    height: 30.h,
-                    decoration: BoxDecoration(
-                      color: ColorManager.black,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: ColorManager.yellow,
-                            size: 16.r,
-                          ),
-                          Text(
-                            '4.0',
-                            style: getMediumStyle(
-                              color: ColorManager.yellow,
-                            ).copyWith(fontSize: FontSize.s14),
-                          ),
-                        ],
+                  SingleChildScrollView(
+                    child: Text(
+                      'Order ID: ${order.orderId}',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -68,7 +52,7 @@ class HistoryOrder extends StatelessWidget {
                 height: Insets.s5.h,
               ),
               Text(
-                '24 Jun 2023 - 05:40 PM',
+                DateFormat.jm().format(order.createdAt.toDate()),
                 style: getMediumStyle(
                   color: ColorManager.black,
                 ).copyWith(
@@ -100,7 +84,7 @@ class HistoryOrder extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'SAR 200.00',
+                    'SAR ${order.total}',
                     style: getBoldStyle(color: ColorManager.black)
                         .copyWith(fontSize: FontSize.s16),
                   ),
@@ -133,7 +117,9 @@ class HistoryOrder extends StatelessWidget {
                 height: Insets.s16.h,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _showFilter(context, order);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -149,6 +135,18 @@ class HistoryOrder extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showFilter(BuildContext context, ORder order) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => OrderBottomSheet(
+        order: order,
+        storeId: storeId,
       ),
     );
   }

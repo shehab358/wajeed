@@ -29,7 +29,6 @@ class _ProductItemState extends State<ProductItem> {
   @override
   void initState() {
     super.initState();
-    _storeGetCubit.getStore();
   }
 
   @override

@@ -10,7 +10,6 @@ import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/features/home/presentation/cubit/basket_cubit.dart';
 import 'package:wajeed/features/product/domain/entities/product.dart';
 import 'package:wajeed/features/product/presentation/cubit/delete_product_cubit/delete_product_cubit.dart';
-import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
 
 class StoreProductItem extends StatefulWidget {
   final Product product;
@@ -24,11 +23,9 @@ class StoreProductItem extends StatefulWidget {
 }
 
 class _StoreProductItemState extends State<StoreProductItem> {
-  final StoreGetCubit _storeGetCubit = serviceLocator.get<StoreGetCubit>();
   @override
   void initState() {
     super.initState();
-    _storeGetCubit.getStore();
   }
 
   @override

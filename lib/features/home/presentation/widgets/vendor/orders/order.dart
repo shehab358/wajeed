@@ -1,24 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:wajeed/core/constants.dart';
+import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
+import 'package:wajeed/core/utils/ui_utils.dart';
 import 'package:wajeed/core/widgets/custom_elevated_button.dart';
-import 'package:wajeed/features/home/presentation/widgets/vendor/orders/new_order/order_bottom_sheet.dart';
+import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order_bottom_sheet.dart';
 import 'package:wajeed/features/orders/domain/entities/order.dart';
+import 'package:wajeed/features/orders/presentation/cubit/cubit/update_order_cubit.dart';
 
-class OrderItem extends StatelessWidget {
+class OrderItem extends StatefulWidget {
   final ORder order;
+  final String storeId;
   const OrderItem({
     super.key,
     required this.order,
+    required this.storeId,
   });
 
   @override
+  State<OrderItem> createState() => _OrderItemState();
+}
+
+class _OrderItemState extends State<OrderItem> {
+  @override
   Widget build(BuildContext context) {
-    DateTime createdAt = (order.createdAt).toDate();
+    DateTime createdAt = widget.order.createdAt.toDate();
+    String timeAgo = timeago.format(createdAt);
 
     return SizedBox(
       height: 310.h,
@@ -37,13 +51,13 @@ class OrderItem extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    order.orderId,
+                    widget.order.orderId,
                     style:
                         TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
                   Container(
-                    width: 90.w,
+                    width: 120.w,
                     height: 30.h,
                     decoration: BoxDecoration(
                       color: ColorManager.lightpurple,
@@ -51,21 +65,15 @@ class OrderItem extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        '$createdAt',
+                        timeAgo,
                         style: getMediumStyle(color: ColorManager.starRate)
-                            .copyWith(fontSize: FontSize.s14),
+                            .copyWith(
+                          fontSize: FontSize.s14,
+                        ),
                       ),
                     ),
                   ),
                 ],
-              ),
-              SizedBox(
-                height: Insets.s5.h,
-              ),
-              Text(
-                '${order.createdAt} ',
-                style: getMediumStyle(color: ColorManager.black)
-                    .copyWith(fontSize: FontSize.s12),
               ),
               SizedBox(
                 height: Insets.s5.h,
@@ -90,13 +98,13 @@ class OrderItem extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'SAR${order.total}',
+                    'SAR${widget.order.total}',
                     style: getBoldStyle(color: ColorManager.black)
                         .copyWith(fontSize: FontSize.s16),
                   ),
                   Spacer(),
                   Text(
-                    order.products.length.toString() + ' items',
+                    '${widget.order.products.length} items',
                     style: getMediumStyle(color: ColorManager.black).copyWith(
                       fontSize: FontSize.s12,
                     ),
@@ -106,23 +114,53 @@ class OrderItem extends StatelessWidget {
               SizedBox(
                 height: Insets.s16.h,
               ),
-              CustomElevatedButton(
-                label: 'Mark as preparing',
-                textStyle: getBoldStyle(color: ColorManager.black).copyWith(
-                  fontSize: FontSize.s18,
-                ),
-                onTap: () {
-                  // isPreparing ? () {} : _showFilter(context);
+              BlocListener<UpdateOrderCubit, UpdateOrderState>(
+                listener: (context, state) {
+                  if (state is UpdateOrderLoading) {
+                    UIUtils.showLoading(context);
+                  } else if (state is UpdateOrderError) {
+                    UIUtils.hideLoading(context);
+                    UIUtils.showMessage(state.message);
+                  } else if (state is UpdateOrderSuccess) {
+                    UIUtils.hideLoading(context);
+                    UIUtils.showMessage('Order updated successfully');
+                  }
                 },
-                backgroundColor: ColorManager.black,
+                child: CustomElevatedButton(
+                  label: widget.order.status == 'waiting' ? 'Mark as Preparing' : 'Mark as Finished',
+                  textStyle: getBoldStyle(color: ColorManager.white).copyWith(
+                    fontSize: FontSize.s18,
+                  ),
+                  onTap: () {
+                    if (widget.order.status == 'waiting') {
+                      serviceLocator.get<UpdateOrderCubit>().updateStore(
+                            order: widget.order,
+                            ownerId: UserId.id,
+                            storeId: widget.storeId,
+                            newStatus: 'Preparing',
+                            newDuration: 20,
+                          );
+                    } else if (widget.order.status == 'Preparing') {
+                      serviceLocator.get<UpdateOrderCubit>().updateStore(
+                            order: widget.order,
+                            ownerId: UserId.id,
+                            storeId: widget.storeId,
+                            newStatus: 'Finished',
+                          );
+                    }
+                  },
+                  backgroundColor: ColorManager.black,
+                ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _showFilter(context, widget.order);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'view order',
+                      'View order',
                     ),
                     Icon(
                       Icons.arrow_forward_sharp,
@@ -137,12 +175,15 @@ class OrderItem extends StatelessWidget {
     );
   }
 
-  void _showFilter(BuildContext context) {
+  void _showFilter(BuildContext context, ORder order) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       isScrollControlled: true,
-      builder: (context) => const OrderBottomSheet(),
+      builder: (context) => OrderBottomSheet(
+        order: order,
+        storeId: widget.storeId,
+      ),
     );
   }
 }

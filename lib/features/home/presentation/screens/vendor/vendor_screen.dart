@@ -7,8 +7,10 @@ import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:wajeed/features/category/presentation/screens/categories_tab.dart';
+import 'package:wajeed/features/orders/presentation/cubit/fetch_store_orders_cubit/fetch_store_orders_cubit.dart';
 import 'package:wajeed/features/store/presentation/screens/my_shop_tab.dart';
 import 'package:wajeed/features/home/presentation/screens/vendor/orders/orders_tab.dart';
 import 'package:wajeed/features/product/presentation/screens/products_tab.dart';
@@ -40,54 +42,76 @@ class _VendorScreenState extends State<VendorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StoreGetCubit, StoreGetStates>(
-      builder: (context, state) {
-        if (state is StoreGetLoading) {
-          return LoadingIndicator();
-        } else if (state is StoreGetError) {
-          return ErrorIndicator(state.message);
-        } else if (state is StoreGetSuccess) {
-          final store = state.store;
+    return BlocProvider(
+      create: (context) => serviceLocator.get<StoreGetCubit>(),
+      child: BlocBuilder<StoreGetCubit, StoreGetStates>(
+        builder: (context, state) {
+          if (state is StoreGetLoading) {
+            return LoadingIndicator();
+          } else if (state is StoreGetError) {
+            return ErrorIndicator(state.message);
+          } else if (state is StoreGetSuccess) {
+            final store = state.store;
 
-          List<Widget> tabs = [
-            OrdersTab(
-              storeId: store.id,
-            ),
-            CategoriesTab(
-              storeId: store.id,
-            ),
-            ProductsTab(
-              storeId: store.id,
-            ),
-            MyShopTab(
-              store: store,
-            ),
-          ];
-
-          return Scaffold(
-            backgroundColor: ColorManager.white,
-            bottomNavigationBar: GestureDetector(
-              onTap: () => log(UserId.id),
-              child: CustomBottomNavigationBar(
-                currentIndex: currentIndex,
-                onTabSelected: onTabSelected,
-                activeColor: ColorManager.primary,
-                backgroundColor: ColorManager.starRate,
-                items: [
-                  NavItem(imageAsset: IconsAssets.orders, label: 'Orders'),
-                  NavItem(
-                      imageAsset: IconsAssets.categories, label: 'Categories'),
-                  NavItem(icon: Icons.category_outlined, label: 'Products'),
-                  NavItem(imageAsset: IconsAssets.store, label: 'My Shop'),
-                ],
+            List<Widget> tabs = [
+              OrdersTab(
+                storeId: store.id,
               ),
-            ),
-            body: tabs[currentIndex],
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
+              CategoriesTab(
+                storeId: store.id,
+              ),
+              ProductsTab(
+                storeId: store.id,
+              ),
+              MyShopTab(
+                store: store,
+              ),
+            ];
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) =>
+                      serviceLocator.get<FetchUserCategoriesCubit>()
+                        ..fetchUserCategories(
+                          store.id,
+                        ),
+                ),
+                BlocProvider(
+                  create: (context) =>
+                      serviceLocator.get<FetchStoreOrdersCubit>()
+                        ..fetchStoreOrders(
+                          store.id,
+                        ),
+                ),
+              ],
+              child: Scaffold(
+                backgroundColor: ColorManager.white,
+                bottomNavigationBar: GestureDetector(
+                  onTap: () => log(UserId.id),
+                  child: CustomBottomNavigationBar(
+                    currentIndex: currentIndex,
+                    onTabSelected: onTabSelected,
+                    activeColor: ColorManager.primary,
+                    backgroundColor: ColorManager.starRate,
+                    items: [
+                      NavItem(imageAsset: IconsAssets.orders, label: 'Orders'),
+                      NavItem(
+                          imageAsset: IconsAssets.categories,
+                          label: 'Categories'),
+                      NavItem(icon: Icons.category_outlined, label: 'Products'),
+                      NavItem(imageAsset: IconsAssets.store, label: 'My Shop'),
+                    ],
+                  ),
+                ),
+                body: tabs[currentIndex],
+              ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
     );
   }
 }

@@ -32,7 +32,6 @@ class _CategoryItemState extends State<CategoryItem> {
   @override
   void initState() {
     super.initState();
-    _storeCubit.getStore();
   }
 
   @override

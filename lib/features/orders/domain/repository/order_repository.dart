@@ -8,4 +8,11 @@ abstract class OrderRepository {
   Future<Either<Failure, List<ORder>>> fetchUserStoreOrder(String storeId);
   Future<Either<Failure, void>> createOrder(
       OrderModel order, String storeId, String ownerId);
+  Future<Either<Failure, void>> updateOrder({
+    required ORder order,
+    required String ownerId,
+    required String storeId,
+    required String newStatus,
+    int? newDuration,
+  });
 }

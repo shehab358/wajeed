@@ -7,6 +7,7 @@ class ORder extends Equatable {
   String orderId;
   final String storeId;
   String status;
+  int duration;
   final List<Product> products;
   final double total;
   final Timestamp createdAt;
@@ -16,6 +17,7 @@ class ORder extends Equatable {
     this.orderId = '',
     required this.storeId,
     this.status = 'waiting',
+    this.duration = 20,
     required this.products,
     required this.total,
     required this.createdAt,
@@ -23,6 +25,14 @@ class ORder extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [orderId, storeId, status, products, total, createdAt, customerId];
+  List<Object?> get props => [
+        orderId,
+        storeId,
+        status,
+        products,
+        total,
+        createdAt,
+        customerId,
+        duration
+      ];
 }

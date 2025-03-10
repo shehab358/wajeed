@@ -69,4 +69,30 @@ class OrderRepositoryImpl implements OrderRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, void>> updateOrder({
+    required ORder order,
+    required String ownerId,
+    required String storeId,
+    required String newStatus,
+    int? newDuration,
+  }) async {
+    try {
+      await orderRemoteDataSource.updateOrder(
+        order: order,
+        ownerId: ownerId,
+        storeId: storeId,
+        newStatus: newStatus,
+        newDuration: newDuration,
+      );
+      return Right(null);
+    } on AppException catch (e) {
+      return left(
+        Failure(
+          e.message,
+        ),
+      );
+    }
+  }
 }

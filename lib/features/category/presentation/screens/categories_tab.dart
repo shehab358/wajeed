@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
@@ -30,95 +29,93 @@ class _CategoriesTabState extends State<CategoriesTab> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<FetchUserCategoriesCubit>(context)
+        .fetchUserCategories(widget.storeId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => serviceLocator.get<FetchUserCategoriesCubit>()
-        ..fetchUserCategories(widget.storeId),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Insets.s18.w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Categories ',
-                style: getBoldStyle(
-                  color: ColorManager.black,
-                  fontSize: FontSize.s24,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: Insets.s18.w,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Categories ',
+              style: getBoldStyle(
+                color: ColorManager.black,
+                fontSize: FontSize.s24,
+              ),
+            ),
+            SizedBox(
+              height: 10.h,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    hint: 'Search',
+                    prefixIcon: const Icon(Icons.search),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      hint: 'Search',
-                      prefixIcon: const Icon(Icons.search),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15.w,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _addCategory(context);
-                    },
-                    child: Container(
-                      width: 50.w,
-                      height: 50.h,
-                      decoration: BoxDecoration(
-                        color: ColorManager.black,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.add,
-                          color: ColorManager.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Expanded(
-                child: BlocBuilder<FetchUserCategoriesCubit,
-                    FetchUserCategoriesStates>(
-                  builder: (context, state) {
-                    if (state is FetchUserCategoriesCubitLoading) {
-                      return LoadingIndicator();
-                    } else if (state is FetchUserCategoriesCubitErrorr) {
-                      return ErrorIndicator(state.message);
-                    } else if (state is FetchUserCategoriesCubitSuccess) {
-                      final List<Category> categories = state.categories;
-                      if (categories.isEmpty) {
-                        return const Center(
-                          child: Text('No categories found'),
-                        );
-                      }
-                      return ListView.builder(
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) => CategoryItem(
-                          categories[index],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
+                SizedBox(
+                  width: 15.w,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _addCategory(context);
                   },
+                  child: Container(
+                    width: 50.w,
+                    height: 50.h,
+                    decoration: BoxDecoration(
+                      color: ColorManager.black,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: ColorManager.white,
+                      ),
+                    ),
+                  ),
                 ),
+              ],
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Expanded(
+              child: BlocBuilder<FetchUserCategoriesCubit,
+                  FetchUserCategoriesStates>(
+                builder: (context, state) {
+                  if (state is FetchUserCategoriesCubitLoading) {
+                    return LoadingIndicator();
+                  } else if (state is FetchUserCategoriesCubitErrorr) {
+                    return ErrorIndicator(state.message);
+                  } else if (state is FetchUserCategoriesCubitSuccess) {
+                    final List<Category> categories = state.categories;
+                    if (categories.isEmpty) {
+                      return const Center(
+                        child: Text('No categories found'),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) => CategoryItem(
+                        categories[index],
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

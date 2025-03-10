@@ -30,14 +30,15 @@ class ProductsTab extends StatefulWidget {
 class _ProductsTabState extends State<ProductsTab> {
   final FetchUserProductsCubit _productCubit =
       serviceLocator.get<FetchUserProductsCubit>();
-  final FetchUserCategoriesCubit _fetchUserCategoriesCubit =
-      serviceLocator.get<FetchUserCategoriesCubit>();
+
 
   String? selectedCategoryId;
 
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<FetchUserCategoriesCubit>(context)
+        .fetchUserCategories(widget.storeId);
   }
 
   @override
@@ -100,112 +101,67 @@ class _ProductsTabState extends State<ProductsTab> {
             SizedBox(height: 20.h),
             SizedBox(
               height: 50.h,
-              child: BlocProvider<FetchUserCategoriesCubit>(
-                create: (context) => _fetchUserCategoriesCubit
-                  ..fetchUserCategories(
-                    widget.storeId,
-                  ),
-                child: BlocBuilder<FetchUserCategoriesCubit,
-                    FetchUserCategoriesStates>(
-                  builder: (context, state) {
-                    if (state is FetchUserCategoriesCubitLoading) {
-                      return LoadingIndicator();
-                    } else if (state is FetchUserCategoriesCubitErrorr) {
-                      return ErrorIndicator(state.message);
-                    } else if (state is FetchUserCategoriesCubitSuccess) {
-                      final List<Category> categories = state.categories;
-                      if (categories.isEmpty) {
-                        return const Center(
-                          child: Text('No categories found'),
-                        );
-                      }
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
-                          final isSelected = category.id == selectedCategoryId;
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedCategoryId = category.id;
-                              });
-                              _productCubit.fetchUserProducts(
-                                widget.storeId,
-                                category.id,
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.w, vertical: 10.h),
-                              margin: EdgeInsets.symmetric(horizontal: 5.w),
-                              decoration: BoxDecoration(
+              child: BlocBuilder<FetchUserCategoriesCubit,
+                  FetchUserCategoriesStates>(
+                builder: (context, state) {
+                  if (state is FetchUserCategoriesCubitLoading) {
+                    return LoadingIndicator();
+                  } else if (state is FetchUserCategoriesCubitErrorr) {
+                    return ErrorIndicator(state.message);
+                  } else if (state is FetchUserCategoriesCubitSuccess) {
+                    final List<Category> categories = state.categories;
+                    if (categories.isEmpty) {
+                      return const Center(
+                        child: Text('No categories found'),
+                      );
+                    }
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        final category = categories[index];
+                        final isSelected = category.id == selectedCategoryId;
+              
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedCategoryId = category.id;
+                            });
+                            _productCubit.fetchUserProducts(
+                              widget.storeId,
+                              category.id,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 10.h),
+                            margin: EdgeInsets.symmetric(horizontal: 5.w),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? ColorManager.black
+                                  : Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Text(
+                              category.name,
+                              style: getBoldStyle(
                                 color: isSelected
-                                    ? ColorManager.black
-                                    : Colors.grey[300],
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Text(
-                                category.name,
-                                style: getBoldStyle(
-                                  color: isSelected
-                                      ? ColorManager.white
-                                      : ColorManager.black,
-                                  fontSize: FontSize.s16,
-                                ),
+                                    ? ColorManager.white
+                                    : ColorManager.black,
+                                fontSize: FontSize.s16,
                               ),
                             ),
-                          );
-                        },
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
               ),
             ),
-            // SizedBox(
-            //   height: 50.h,
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: categories.length,
-            //     itemBuilder: (context, index) {
-            //       final category = categories[index];
-            //       final isSelected = category.id == selectedCategoryId;
-
-            //       return GestureDetector(
-            //         onTap: () {
-            //           setState(() {
-            //             selectedCategoryId = category.id;
-            //           });
-            //           _productCubit.fetchUserProducts(
-            //               widget.storeId, category.id);
-            //         },
-            //         child: Container(
-            //           padding: EdgeInsets.symmetric(
-            //               horizontal: 16.w, vertical: 10.h),
-            //           margin: EdgeInsets.symmetric(horizontal: 5.w),
-            //           decoration: BoxDecoration(
-            //             color:
-            //                 isSelected ? ColorManager.black : Colors.grey[300],
-            //             borderRadius: BorderRadius.circular(10.r),
-            //           ),
-            //           child: Text(
-            //             category.name,
-            //             style: getBoldStyle(
-            //               color: isSelected
-            //                   ? ColorManager.white
-            //                   : ColorManager.black,
-            //               fontSize: FontSize.s16,
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
+          
             Expanded(
               child:
                   BlocBuilder<FetchUserProductsCubit, FetchUserProductsStates>(

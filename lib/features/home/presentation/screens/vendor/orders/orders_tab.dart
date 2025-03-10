@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
@@ -7,6 +9,7 @@ import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/features/home/presentation/widgets/vendor/orders/new_order/new_order_tab.dart';
 import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order_history/order_history_tab.dart';
 import 'package:wajeed/features/home/presentation/widgets/vendor/orders/preparing_order/preparing_order_tab.dart';
+import 'package:wajeed/features/orders/presentation/cubit/fetch_store_orders_cubit/fetch_store_orders_cubit.dart';
 
 class OrdersTab extends StatefulWidget {
   final String storeId;
@@ -23,6 +26,10 @@ class _OrdersTabState extends State<OrdersTab> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<FetchStoreOrdersCubit>(context).fetchStoreOrders(
+      widget.storeId,
+    );
+
     _pageController = PageController();
   }
 
@@ -68,20 +75,34 @@ class _OrdersTabState extends State<OrdersTab> {
               ),
               SizedBox(height: Insets.s16.h),
               Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await serviceLocator
+                        .get<FetchStoreOrdersCubit>()
+                        .fetchStoreOrders(
+                          widget.storeId,
+                        );
                   },
-                  children: [
-                    NewOrderTab(
-                      storeId: widget.storeId,
-                    ),
-                    PreparingOrderTab(),
-                    OrderHistoryTab(),
-                  ],
+                  child: PageView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    children: [
+                      NewOrderTab(
+                        storeId: widget.storeId,
+                      ),
+                      PreparingOrderTab(
+                        storeId: widget.storeId,
+                      ),
+                      OrderHistoryTab(
+                        storeId: widget.storeId,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

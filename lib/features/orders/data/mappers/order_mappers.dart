@@ -9,5 +9,7 @@ extension OrderMappers on OrderModel {
         total: total,
         createdAt: createdAt,
         customerId: customerId,
+        duration: duration,
+        orderId: orderId,
       );
 }

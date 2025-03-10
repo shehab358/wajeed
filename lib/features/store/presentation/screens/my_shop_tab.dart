@@ -97,7 +97,7 @@ class _MyShopTabState extends State<MyShopTab> {
               height: Sizes.s50.h,
             ),
             ShopTab(
-              callBack: () {
+            callBack: () {
                 Navigator.pushNamed(
                   context,
                   Routes.storeSettings,

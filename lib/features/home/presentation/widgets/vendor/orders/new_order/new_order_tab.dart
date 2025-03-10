@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/home/presentation/widgets/vendor/orders/order.dart';
@@ -16,29 +15,31 @@ class NewOrderTab extends StatefulWidget {
 }
 
 class _NewOrderTabState extends State<NewOrderTab> {
-  final FetchStoreOrdersCubit _fetchStoreOrdersCubit =
-      serviceLocator.get<FetchStoreOrdersCubit>();
-
   @override
   void initState() {
     super.initState();
-    _fetchStoreOrdersCubit.fetchStoreOrders(widget.storeId);
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FetchStoreOrdersCubit, FetchStoreOrderStates>(
-      bloc: _fetchStoreOrdersCubit,
       builder: (context, state) {
         if (state is FetchStoreOrderCubitLoading) {
           return LoadingIndicator();
         } else if (state is FetchStoreOrderCubitError) {
           return ErrorIndicator(state.message);
         } else if (state is FetchStoreOrderCubitSuccess) {
+          final waitingOrders =
+              state.orders.where((order) => order.status == "waiting").toList();
+
           return ListView.builder(
-            itemCount: state.orders.length,
+            itemCount: waitingOrders.length,
             itemBuilder: (context, index) {
-              return OrderItem(order: state.orders[index]);
+              return OrderItem(
+                order: waitingOrders[index],
+                storeId: widget.storeId,
+              );
             },
           );
         } else {

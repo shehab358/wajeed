@@ -5,8 +5,9 @@ import 'package:wajeed/features/product/data/models/product_models.dart';
 // ignore: must_be_immutable
 class OrderModel extends ORder {
   OrderModel({
-    orderId = '',
+    super.orderId = '',
     super.status = 'waiting',
+    super.duration = 20,
     required super.products,
     required super.total,
     required super.createdAt,
@@ -14,8 +15,10 @@ class OrderModel extends ORder {
     required super.storeId,
   });
   Map<String, dynamic> toJson() => {
+        'orderId': orderId,
         'storeId': storeId,
         'status': status,
+        'duration': duration,
         'products': {
           for (var product in products)
             product.id: {
@@ -35,8 +38,10 @@ class OrderModel extends ORder {
       };
   OrderModel.fromJson(Map<String, dynamic> json)
       : this(
+          orderId: json['orderId'],
           storeId: json['storeId'],
           status: json['status'],
+          duration: json['duration'] ?? 20,
           products: [
             for (var product in json['products'].values)
               ProductModel.fromJson(product)
