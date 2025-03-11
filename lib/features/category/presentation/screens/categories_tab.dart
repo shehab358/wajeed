@@ -23,8 +23,7 @@ class CategoriesTab extends StatefulWidget {
 }
 
 class _CategoriesTabState extends State<CategoriesTab> {
-  // final FetchUserCategoriesCubit _fetchUserCategoryCubit =
-  //     serviceLocator.get<FetchUserCategoriesCubit>();
+
 
   @override
   void initState() {

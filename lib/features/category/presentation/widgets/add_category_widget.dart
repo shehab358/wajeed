@@ -29,7 +29,6 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
   @override
   void initState() {
     super.initState();
-    _storeCubit.getStore();
   }
 
   final TextEditingController _categoryController = TextEditingController();

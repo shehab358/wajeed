@@ -4,7 +4,7 @@ import 'package:wajeed/features/store/domain/entities/store.dart';
 class StoreModel extends Store {
   StoreModel({
     super.id = '',
-    super.isSales = false,
+    super.isSales = 'false',
     required super.name,
     required super.userId,
     required super.tagline,
@@ -57,7 +57,7 @@ class StoreModel extends Store {
     double? minimumOrderCost,
     String? paymentMethod,
     String? category,
-    bool? isSales,
+    String? isSales,
   }) {
     return StoreModel(
       id: id ?? this.id,

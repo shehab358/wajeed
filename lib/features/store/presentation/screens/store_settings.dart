@@ -39,6 +39,12 @@ class _StoreSettingsState extends State<StoreSettings> {
   String? selectedCity;
   String? selectedPaymentMethod;
   String? selectedCategory;
+  String? selectedValue;
+  void _onButtonPressed(String value) {
+    setState(() {
+      selectedValue = value;
+    });
+  }
 
   List<Category> egyptGovernorates = [
     Category(id: '1', name: 'Cairo'),
@@ -288,6 +294,34 @@ class _StoreSettingsState extends State<StoreSettings> {
                 categories: categories,
               ),
               SizedBox(height: Insets.s16.h),
+              Text(
+                'Are You on sales?',
+                style: getRegularStyle(
+                  color: ColorManager.black,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => _onButtonPressed("Yes"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          selectedValue == "Yes" ? Colors.green : Colors.grey,
+                    ),
+                    child: Text("Yes"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _onButtonPressed("No"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          selectedValue == "No" ? Colors.red : Colors.grey,
+                    ),
+                    child: Text("No"),
+                  ),
+                ],
+              ),
               BlocListener<UpdateStoreCubit, UpdateStoreStates>(
                 listener: (context, state) async {
                   if (state is StoreUpdateLoading) {
@@ -315,6 +349,7 @@ class _StoreSettingsState extends State<StoreSettings> {
                         minimumOrderCost: double.parse(minOrderController.text),
                         paymentMethod: selectedPaymentMethod!,
                         category: selectedCategory!,
+                        isSales: selectedValue!,
                       ),
                       UserId.id,
                     );

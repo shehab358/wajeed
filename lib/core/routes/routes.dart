@@ -13,4 +13,8 @@ class Routes {
   static const String walkthorough = '/walkthorough';
   static const String privacy = '/privacy';
   static const String basket = '/basket';
+  static const String food = '/food';
+  static const String grocery = '/grocery';
+  static const String medicine = '/medicine';
+  static const String allStores = '/alls';
 }

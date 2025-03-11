@@ -22,7 +22,8 @@ import 'package:wajeed/features/product/presentation/widgets/category_drop_down_
 import 'package:wajeed/features/store/presentation/cubit/store_get_cubit/store_get_cubit.dart';
 
 class AddProductWidget extends StatefulWidget {
-  const AddProductWidget({super.key});
+  final String storeId;
+  const AddProductWidget({super.key, required this.storeId});
 
   @override
   State<AddProductWidget> createState() => _AddProductWidgetState();
@@ -41,11 +42,6 @@ class _AddProductWidgetState extends State<AddProductWidget> {
   @override
   void initState() {
     super.initState();
-    _storeGetCubit.getStore();
-    // final storeId = _storeGetCubit.userStore?.id;
-    // if (storeId != null) {
-    //   _fetchUserCategoriesCubit.fetchUserCategories(storeId);
-    // }
   }
 
   @override

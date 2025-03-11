@@ -18,34 +18,40 @@ class _NewOrderTabState extends State<NewOrderTab> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FetchStoreOrdersCubit, FetchStoreOrderStates>(
-      builder: (context, state) {
-        if (state is FetchStoreOrderCubitLoading) {
-          return LoadingIndicator();
-        } else if (state is FetchStoreOrderCubitError) {
-          return ErrorIndicator(state.message);
-        } else if (state is FetchStoreOrderCubitSuccess) {
-          final waitingOrders =
-              state.orders.where((order) => order.status == "waiting").toList();
-
-          return ListView.builder(
-            itemCount: waitingOrders.length,
-            itemBuilder: (context, index) {
-              return OrderItem(
-                order: waitingOrders[index],
-                storeId: widget.storeId,
-              );
-            },
-          );
-        } else {
-          return const SizedBox();
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        await BlocProvider.of<FetchStoreOrdersCubit>(context)
+            .fetchStoreOrders(widget.storeId);
       },
+      child: BlocBuilder<FetchStoreOrdersCubit, FetchStoreOrderStates>(
+        builder: (context, state) {
+          if (state is FetchStoreOrderCubitLoading) {
+            return LoadingIndicator();
+          } else if (state is FetchStoreOrderCubitError) {
+            return ErrorIndicator(state.message);
+          } else if (state is FetchStoreOrderCubitSuccess) {
+            final waitingOrders = state.orders
+                .where((order) => order.status == "waiting")
+                .toList();
+
+            return ListView.builder(
+              itemCount: waitingOrders.length,
+              itemBuilder: (context, index) {
+                return OrderItem(
+                  order: waitingOrders[index],
+                  storeId: widget.storeId,
+                );
+              },
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
     );
   }
 }

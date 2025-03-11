@@ -14,6 +14,7 @@ import 'package:wajeed/core/widgets/custom_text_field.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/home/presentation/widgets/custom_slider.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/category_item.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/delivery_location_bottom_sheet.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/filter.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/profile.dart';
@@ -148,39 +149,13 @@ class _HomeTabState extends State<HomeTab> {
                 SizedBox(
                   height: 150.h,
                   child: ListView.builder(
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 100.h,
-                            width: 100.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              color: ColorManager.yellow,
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  ImageAssets.food,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 6.h,
-                          ),
-                          Text(
-                            'Food',
-                            style: getMediumStyle(
-                              color: ColorManager.black,
-                            ).copyWith(
-                              fontSize: FontSize.s18,
-                            ),
-                          ),
-                        ],
-                      ),
+                    itemBuilder: (context, index) => CategoryItem(
+                      image: categories[index].image,
+                      name: categories[index].name,
+                      route: categories[index].route,
                     ),
                     scrollDirection: Axis.horizontal,
-                    itemCount: 6,
+                    itemCount: categories.length,
                   ),
                 ),
                 SizedBox(
@@ -206,7 +181,9 @@ class _HomeTabState extends State<HomeTab> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, Routes.allStores);
+                      },
                       child: Text(
                         'View all',
                         style: getRegularStyle(
@@ -294,3 +271,21 @@ void _showFilter(BuildContext context) {
     builder: (context) => const Filter(),
   );
 }
+
+List<CategoryItem> categories = [
+  CategoryItem(
+    image: ImageAssets.food,
+    name: 'Food',
+    route: Routes.food,
+  ),
+  CategoryItem(
+    image: ImageAssets.grocery,
+    name: 'Grocery',
+    route: Routes.grocery,
+  ),
+  CategoryItem(
+    image: ImageAssets.medicine,
+    name: 'Medicine',
+    route: Routes.medicine,
+  ),
+];

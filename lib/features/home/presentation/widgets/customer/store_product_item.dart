@@ -30,9 +30,7 @@ class StoreProductItem extends StatefulWidget {
 
 class _StoreProductItemState extends State<StoreProductItem> {
   @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {

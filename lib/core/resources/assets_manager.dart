@@ -12,6 +12,8 @@ class ImageAssets {
   static const String logo = '$_imagePath/logo.png';
   static const String password = '$_imagePath/password.jpg';
   static const String user = '$_imagePath/user.png';
+  static const String medicine = '$_imagePath/medicne.jpg';
+  static const String grocery = '$_imagePath/grocery.jpg';
 }
 
 class SvgAssets {

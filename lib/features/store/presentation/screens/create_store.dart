@@ -290,7 +290,7 @@ class _CreateStoreState extends State<CreateStore> {
                         serviceLocator.get<CreateStoreCubit>().createStore(
                               StoreModel(
                                 name: nameController.text,
-                                isSales: false,
+                                isSales: 'false',
                                 userId: UserId.id,
                                 tagline: taglineController.text,
                                 city: selectedCity!,

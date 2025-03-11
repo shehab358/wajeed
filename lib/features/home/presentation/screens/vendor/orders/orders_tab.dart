@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wajeed/core/di/service_locator.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
@@ -75,34 +74,25 @@ class _OrdersTabState extends State<OrdersTab> {
               ),
               SizedBox(height: Insets.s16.h),
               Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    await serviceLocator
-                        .get<FetchStoreOrdersCubit>()
-                        .fetchStoreOrders(
-                          widget.storeId,
-                        );
+                child: PageView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
                   },
-                  child: PageView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    },
-                    children: [
-                      NewOrderTab(
-                        storeId: widget.storeId,
-                      ),
-                      PreparingOrderTab(
-                        storeId: widget.storeId,
-                      ),
-                      OrderHistoryTab(
-                        storeId: widget.storeId,
-                      ),
-                    ],
-                  ),
+                  children: [
+                    NewOrderTab(
+                      storeId: widget.storeId,
+                    ),
+                    PreparingOrderTab(
+                      storeId: widget.storeId,
+                    ),
+                    OrderHistoryTab(
+                      storeId: widget.storeId,
+                    ),
+                  ],
                 ),
               ),
             ],

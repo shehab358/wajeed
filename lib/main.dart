@@ -13,6 +13,7 @@ import 'package:wajeed/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/add_category_cubit/add_category_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/delete_category_c/delete_category_cubit.dart';
 import 'package:wajeed/features/category/presentation/cubit/fetch_all_categories_cubit/fetch_all_categories_cubit.dart';
+import 'package:wajeed/features/category/presentation/cubit/fetch_user_categories_cubit/fetch_user_categories_cubit.dart';
 import 'package:wajeed/features/home/presentation/cubit/basket_cubit.dart';
 import 'package:wajeed/features/orders/presentation/cubit/cubit/update_order_cubit.dart';
 import 'package:wajeed/features/orders/presentation/cubit/fetch_user_orders_cubit/fetch_user_orders_cubit.dart';
@@ -114,6 +115,9 @@ class WajedApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => serviceLocator.get<FetchUserOrdersCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator.get<FetchUserCategoriesCubit>(),
         ),
       ],
       child: ScreenUtilInit(

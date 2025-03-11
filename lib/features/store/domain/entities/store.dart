@@ -11,13 +11,13 @@ class Store extends Equatable {
   final double minimumOrderCost;
   final String paymentMethod;
   final String category;
-  final bool isSales;
+  final String isSales;
   late double rating;
   late int numberOfRatings;
 
   Store({
     this.id = '',
-    this.isSales = false,
+    this.isSales = 'false',
     required this.name,
     required this.userId,
     required this.tagline,

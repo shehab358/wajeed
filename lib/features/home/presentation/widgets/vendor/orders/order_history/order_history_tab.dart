@@ -22,64 +22,70 @@ class OrderHistoryTab extends StatelessWidget {
         horizontal: Insets.s16.w,
         vertical: Insets.s20.h,
       ),
-      child: BlocBuilder<FetchStoreOrdersCubit, FetchStoreOrderStates>(
-        builder: (context, state) {
-          if (state is FetchStoreOrderCubitLoading) {
-            return LoadingIndicator();
-          } else if (state is FetchStoreOrderCubitError) {
-            return ErrorIndicator(state.message);
-          } else if (state is FetchStoreOrderCubitSuccess) {
-            final finishedOrders = state.orders
-                .where((order) => order.status == "Finished")
-                .toList();
-
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Today's Orders",
-                        style: getBoldStyle(
-                          color: ColorManager.black,
-                          fontSize: FontSize.s16,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        '(${finishedOrders.length})',
-                        style: getBoldStyle(
-                          color: ColorManager.black,
-                          fontSize: FontSize.s14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  SizedBox(
-                    height: 862.h,
-                    child: ListView.builder(
-                      itemCount: finishedOrders.length,
-                      itemBuilder: (context, index) {
-                        return HistoryOrder(
-                          order: finishedOrders[index],
-                          storeId: storeId,
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15.h,
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return SizedBox();
-          }
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await BlocProvider.of<FetchStoreOrdersCubit>(context)
+              .fetchStoreOrders(storeId);
         },
+        child: BlocBuilder<FetchStoreOrdersCubit, FetchStoreOrderStates>(
+          builder: (context, state) {
+            if (state is FetchStoreOrderCubitLoading) {
+              return LoadingIndicator();
+            } else if (state is FetchStoreOrderCubitError) {
+              return ErrorIndicator(state.message);
+            } else if (state is FetchStoreOrderCubitSuccess) {
+              final finishedOrders = state.orders
+                  .where((order) => order.status == "Finished")
+                  .toList();
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Today's Orders",
+                          style: getBoldStyle(
+                            color: ColorManager.black,
+                            fontSize: FontSize.s16,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          '(${finishedOrders.length})',
+                          style: getBoldStyle(
+                            color: ColorManager.black,
+                            fontSize: FontSize.s14,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    SizedBox(
+                      height: 862.h,
+                      child: ListView.builder(
+                        itemCount: finishedOrders.length,
+                        itemBuilder: (context, index) {
+                          return HistoryOrder(
+                            order: finishedOrders[index],
+                            storeId: storeId,
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return SizedBox();
+            }
+          },
+        ),
       ),
     );
   }

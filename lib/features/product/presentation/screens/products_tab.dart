@@ -31,7 +31,6 @@ class _ProductsTabState extends State<ProductsTab> {
   final FetchUserProductsCubit _productCubit =
       serviceLocator.get<FetchUserProductsCubit>();
 
-
   String? selectedCategoryId;
 
   @override
@@ -82,7 +81,10 @@ class _ProductsTabState extends State<ProductsTab> {
                 SizedBox(width: 15.w),
                 GestureDetector(
                   onTap: () {
-                    _addProduct(context);
+                    _addProduct(
+                      context,
+                      widget.storeId,
+                    );
                   },
                   child: Container(
                     width: 50.w,
@@ -112,7 +114,7 @@ class _ProductsTabState extends State<ProductsTab> {
                     final List<Category> categories = state.categories;
                     if (categories.isEmpty) {
                       return const Center(
-                        child: Text('No categories found'),
+                        child: Text('No Products found'),
                       );
                     }
                     return ListView.builder(
@@ -121,7 +123,7 @@ class _ProductsTabState extends State<ProductsTab> {
                       itemBuilder: (context, index) {
                         final category = categories[index];
                         final isSelected = category.id == selectedCategoryId;
-              
+
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -161,7 +163,6 @@ class _ProductsTabState extends State<ProductsTab> {
                 },
               ),
             ),
-          
             Expanded(
               child:
                   BlocBuilder<FetchUserProductsCubit, FetchUserProductsStates>(
@@ -199,11 +200,13 @@ class _ProductsTabState extends State<ProductsTab> {
     );
   }
 
-  void _addProduct(BuildContext context) {
+  void _addProduct(BuildContext context, String storeId) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => const AddProductWidget(),
+      builder: (context) => AddProductWidget(
+        storeId: storeId,
+      ),
     );
   }
 }

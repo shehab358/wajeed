@@ -5,7 +5,11 @@ import 'package:wajeed/features/auth/presentation/screens/login_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/privacy_policy.dart';
 import 'package:wajeed/features/auth/presentation/screens/register_screen.dart';
 import 'package:wajeed/features/auth/presentation/screens/select_screen.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/all_stores.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/basket_tab.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/categories/food.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/categories/groceries.dart';
+import 'package:wajeed/features/home/presentation/screens/customer/categories/medicine.dart';
 import 'package:wajeed/features/home/presentation/screens/customer/store.dart';
 import 'package:wajeed/features/store/presentation/screens/availability.dart';
 import 'package:wajeed/features/store/presentation/screens/create_store.dart';
@@ -86,6 +90,26 @@ class RouteGenerator {
       case Routes.basket:
         return MaterialPageRoute(
           builder: (_) => BasketTab(),
+          settings: settings,
+        );
+      case Routes.food:
+        return MaterialPageRoute(
+          builder: (_) => Food(),
+          settings: settings,
+        );
+      case Routes.grocery:
+        return MaterialPageRoute(
+          builder: (_) => Groceries(),
+          settings: settings,
+        );
+      case Routes.medicine:
+        return MaterialPageRoute(
+          builder: (_) => Medicine(),
+          settings: settings,
+        );
+      case Routes.allStores:
+        return MaterialPageRoute(
+          builder: (_) => AllStores(),
           settings: settings,
         );
 

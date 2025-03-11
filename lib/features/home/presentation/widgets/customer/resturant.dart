@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wajeed/core/resources/assets_manager.dart';
 import 'package:wajeed/core/resources/color_manager.dart';
 import 'package:wajeed/core/resources/font_manager.dart';
 import 'package:wajeed/core/resources/styles_manager.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
+import 'package:wajeed/core/routes/routes.dart';
+import 'package:wajeed/features/home/presentation/widgets/customer/resturant_product.dart';
+import 'package:wajeed/features/product/presentation/cubit/fetch_all_products_cubit/fetch_all_products_cubit.dart';
+import 'package:wajeed/features/product/presentation/cubit/fetch_all_products_cubit/fetch_all_products_states.dart';
+import 'package:wajeed/features/store/domain/entities/store.dart';
 
-class Resturant extends StatelessWidget {
-  const Resturant({super.key});
+class Resturant extends StatefulWidget {
+  final Store store;
+  const Resturant({super.key, required this.store});
+
+  @override
+  State<Resturant> createState() => _ResturantState();
+}
+
+class _ResturantState extends State<Resturant> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +44,7 @@ class Resturant extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'McDonalds',
+                  widget.store.name,
                   style: getBoldStyle(
                     color: ColorManager.black,
                   ).copyWith(
@@ -35,7 +52,7 @@ class Resturant extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Fast Food',
+                  widget.store.tagline,
                   style: getRegularStyle(
                     color: ColorManager.black,
                   ).copyWith(
@@ -86,7 +103,7 @@ class Resturant extends StatelessWidget {
                             width: 5.w,
                           ),
                           Text(
-                            'EGP 14.99',
+                            'EGP ${widget.store.minimumOrderCost}',
                             style: getMediumStyle(color: ColorManager.starRate)
                                 .copyWith(fontSize: FontSize.s16),
                           ),
@@ -98,7 +115,13 @@ class Resturant extends StatelessWidget {
               ],
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.store,
+                  arguments: widget.store,
+                );
+              },
               child: Text(
                 'See all',
                 style: getRegularStyle(
@@ -115,54 +138,26 @@ class Resturant extends StatelessWidget {
         ),
         SizedBox(
           height: 170.h,
-          child: ListView.builder(
-            itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: Column(
-                children: [
-                  Container(
-                    height: 100.h,
-                    width: 100.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          ImageAssets.meal,
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+          child: BlocBuilder<FetchAllProductsCubit, FetchAllProductsStates>(
+            builder: (context, state) {
+              if (state is FetchAllProductsLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is FetchAllProductsError) {
+                return Center(child: Text(state.message));
+              } else if (state is FetchAllProductsSuccess) {
+                final products = state.products;
+
+                return ListView.builder(
+                  itemCount: products.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => ResturantProduct(
+                    product: products[index],
                   ),
-                  SizedBox(
-                    height: 6.h,
-                  ),
-                  Text(
-                    'Pizza medium',
-                    style: getMediumStyle(
-                      color: ColorManager.black,
-                    ).copyWith(
-                      fontSize: FontSize.s14,
-                    ),
-                  ),
-                  Text(
-                    'SAR 20.00',
-                    style: getMediumStyle(
-                      color: ColorManager.starRate,
-                    ).copyWith(
-                      fontSize: FontSize.s14,
-                    ),
-                  ),
-                  Text(
-                    'SAR 20.00',
-                    style: getTextWithLine().copyWith(
-                      fontSize: FontSize.s12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            scrollDirection: Axis.horizontal,
-            itemCount: 6,
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
           ),
         ),
       ],

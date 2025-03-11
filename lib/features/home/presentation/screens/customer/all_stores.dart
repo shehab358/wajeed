@@ -1,37 +1,39 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajeed/core/resources/values_manager.dart';
 import 'package:wajeed/core/widgets/error_indicator.dart';
 import 'package:wajeed/core/widgets/loading_indicator.dart';
 import 'package:wajeed/features/home/presentation/widgets/customer/resturant.dart';
-
 import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_cubit.dart';
 import 'package:wajeed/features/store/presentation/cubit/all_stores_get_cubit/all_stores_get_states.dart';
 
-class SalesTab extends StatelessWidget {
-  const SalesTab({super.key});
+class AllStores extends StatelessWidget {
+  const AllStores({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Insets.s16),
-          child: Column(
-            children: [
-              BlocBuilder<AllStoresGetCubit, AllStoresGetStates>(
-                builder: (context, state) {
-                  if (state is AllStoresGetLoading) {
-                    return LoadingIndicator();
-                  } else if (state is AllStoresGetError) {
-                    return ErrorIndicator(state.message);
-                  } else if (state is AllStoresGetSuccess) {
-                    final salesStore = state.stores
-                        .where((store) => store.isSales == 'Yes')
-                        .toList();
-                    log(salesStore.length.toString());
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Food Section'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(Insets.s16),
+        child: Column(
+          children: [
+            BlocBuilder<AllStoresGetCubit, AllStoresGetStates>(
+              builder: (context, state) {
+                if (state is AllStoresGetLoading) {
+                  return LoadingIndicator();
+                } else if (state is AllStoresGetError) {
+                  return ErrorIndicator(state.message);
+                } else if (state is AllStoresGetSuccess) {
+                  final salesStore = state.stores;
+
+                  if (salesStore.isEmpty) {
+                    return Center(
+                      child: Text('No stores available'),
+                    );
+                  } else {
                     return Expanded(
                       child: ListView.separated(
                         itemBuilder: (context, index) => Resturant(
@@ -41,13 +43,13 @@ class SalesTab extends StatelessWidget {
                         separatorBuilder: (context, index) => Divider(),
                       ),
                     );
-                  } else {
-                    return SizedBox();
                   }
-                },
-              )
-            ],
-          ),
+                } else {
+                  return SizedBox();
+                }
+              },
+            )
+          ],
         ),
       ),
     );
