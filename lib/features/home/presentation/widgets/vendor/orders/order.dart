@@ -42,7 +42,7 @@ class _OrderItemState extends State<OrderItem> {
         color: ColorManager.white,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: Insets.s16.w,
+            horizontal: Insets.s8.w,
             vertical: Insets.s16.h,
           ),
           child: Column(

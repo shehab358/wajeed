@@ -22,7 +22,7 @@ class HistoryOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 270.h,
+      height: 300.h,
       width: double.infinity,
       child: Card(
         elevation: 2,

@@ -36,46 +36,53 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
   Widget build(BuildContext context) {
     String storeId = _storeCubit.userStore!.id;
 
-    return Container(
-      height: 400.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Insets.s16.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Enter Category Name'),
-            CustomTextField(
-              hint: 'Category Name',
-              controller: _categoryController,
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            BlocListener<AddCategoryCubit, AddCategoryStates>(
-              listener: (context, state) async {
-                if (state is AddCategoryLoading) {
-                  UIUtils.showLoading(context);
-                } else if (state is AddCategoryError) {
-                  UIUtils.hideLoading(context);
-                  UIUtils.showMessage(state.message);
-                } else if (state is AddCategorySuccess) {
-                  UIUtils.hideLoading(context);
-                  await _fetchUserCategoryCubit.fetchUserCategories(storeId);
-                  Navigator.pop(context);
-                }
-              },
-              child: CustomElevatedButton(
-                label: 'Add',
-                onTap: () {
-                  final CategoryModel category = CategoryModel(
-                    FirebaseAuth.instance.currentUser!.uid,
-                    name: _categoryController.text,
-                  );
-                  _addCategoryCubit.addCategory(category, storeId);
-                },
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        height: 700.h,
+        child: Padding(
+          padding: EdgeInsets.only(
+            right: Insets.s16.w,
+            left: Insets.s16.w,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Enter Category Name'),
+              CustomTextField(
+                hint: 'Category Name',
+                controller: _categoryController,
               ),
-            )
-          ],
+              SizedBox(
+                height: 20.h,
+              ),
+              BlocListener<AddCategoryCubit, AddCategoryStates>(
+                listener: (context, state) async {
+                  if (state is AddCategoryLoading) {
+                    UIUtils.showLoading(context);
+                  } else if (state is AddCategoryError) {
+                    UIUtils.hideLoading(context);
+                    UIUtils.showMessage(state.message);
+                  } else if (state is AddCategorySuccess) {
+                    UIUtils.hideLoading(context);
+                    await _fetchUserCategoryCubit.fetchUserCategories(storeId);
+                    Navigator.pop(context);
+                  }
+                },
+                child: CustomElevatedButton(
+                  label: 'Add',
+                  onTap: () {
+                    final CategoryModel category = CategoryModel(
+                      FirebaseAuth.instance.currentUser!.uid,
+                      name: _categoryController.text,
+                    );
+                    _addCategoryCubit.addCategory(category, storeId);
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

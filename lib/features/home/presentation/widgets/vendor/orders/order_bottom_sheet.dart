@@ -36,7 +36,7 @@ class _OrderBottomSheetState extends State<OrderBottomSheet> {
         Spacer(),
         Container(
           padding: EdgeInsets.all(Insets.s18),
-          height: 110.h,
+          height: 120.h,
           decoration: BoxDecoration(
             color: ColorManager.starRate,
             borderRadius: BorderRadius.only(

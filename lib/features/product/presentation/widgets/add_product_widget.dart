@@ -46,150 +46,153 @@ class _AddProductWidgetState extends State<AddProductWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 600.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Insets.s16.w),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 16.h,
-              ),
-              Center(
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50.r,
-                      backgroundImage: AssetImage(ImageAssets.food),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Text(
-                      'Add Image',
-                      style: getMediumStyle(
-                        color: ColorManager.black,
-                        fontSize: FontSize.s14,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        height: 900.h,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: Insets.s16.w),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 16.h,
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 50.r,
+                        backgroundImage: AssetImage(ImageAssets.food),
                       ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Text(
+                        'Add Image',
+                        style: getMediumStyle(
+                          color: ColorManager.black,
+                          fontSize: FontSize.s14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text('Enter Product Name'),
+                CustomTextField(
+                  hint: 'Product Name',
+                  controller: _productName,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Text('Chose Category'),
+                CategoryDropdown(
+                  onCategorySelected: (Category category) {
+                    selectedCategory = category;
+                  },
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Text('Enter Barcode'),
+                CustomTextField(
+                  hint: 'Barcode',
+                  controller: _barcodeController,
+                  textInputType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Text('Enter Price'),
+                CustomTextField(
+                  hint: 'Price',
+                  controller: _priceController,
+                  textInputType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Text('Enter Price before Discount'),
+                CustomTextField(
+                  hint: 'Price before Discount',
+                  controller: _priceBeforeController,
+                  textInputType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                MultiBlocListener(
+                  listeners: [
+                    BlocListener<FetchUserCategoriesCubit,
+                        FetchUserCategoriesStates>(
+                      listener: (context, state) {
+                        if (state is FetchUserCategoriesCubitLoading) {
+                          UIUtils.showLoading(context);
+                        }
+                        if (state is FetchUserCategoriesCubitSuccess &&
+                            state.categories.isNotEmpty) {
+                          setState(() {
+                            selectedCategory = state.categories.first;
+                          });
+                          UIUtils.hideLoading(context);
+                        } else if (state is FetchUserCategoriesCubitErrorr) {
+                          UIUtils.hideLoading(context);
+                          UIUtils.showMessage(state.message);
+                        }
+                      },
                     ),
                   ],
-                ),
-              ),
-              Text('Enter Product Name'),
-              CustomTextField(
-                hint: 'Product Name',
-                controller: _productName,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Text('Chose Category'),
-              CategoryDropdown(
-                onCategorySelected: (Category category) {
-                  selectedCategory = category;
-                },
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Text('Enter Barcode'),
-              CustomTextField(
-                hint: 'Barcode',
-                controller: _barcodeController,
-                textInputType: TextInputType.number,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Text('Enter Price'),
-              CustomTextField(
-                hint: 'Price',
-                controller: _priceController,
-                textInputType: TextInputType.number,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Text('Enter Price before Discount'),
-              CustomTextField(
-                hint: 'Price before Discount',
-                controller: _priceBeforeController,
-                textInputType: TextInputType.number,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              MultiBlocListener(
-                listeners: [
-                  BlocListener<FetchUserCategoriesCubit,
-                      FetchUserCategoriesStates>(
+                  child: BlocListener<AddProductCubit, AddProductStates>(
                     listener: (context, state) {
-                      if (state is FetchUserCategoriesCubitLoading) {
+                      if (state is ProductAddLoading) {
                         UIUtils.showLoading(context);
-                      }
-                      if (state is FetchUserCategoriesCubitSuccess &&
-                          state.categories.isNotEmpty) {
-                        setState(() {
-                          selectedCategory = state.categories.first;
-                        });
-                        UIUtils.hideLoading(context);
-                      } else if (state is FetchUserCategoriesCubitErrorr) {
+                      } else if (state is ProductAddError) {
                         UIUtils.hideLoading(context);
                         UIUtils.showMessage(state.message);
+                      } else if (state is ProductAddSuccess) {
+                        UIUtils.hideLoading(context);
                       }
                     },
-                  ),
-                ],
-                child: BlocListener<AddProductCubit, AddProductStates>(
-                  listener: (context, state) {
-                    if (state is ProductAddLoading) {
-                      UIUtils.showLoading(context);
-                    } else if (state is ProductAddError) {
-                      UIUtils.hideLoading(context);
-                      UIUtils.showMessage(state.message);
-                    } else if (state is ProductAddSuccess) {
-                      UIUtils.hideLoading(context);
-                    }
-                  },
-                  child: CustomElevatedButton(
-                    label: 'Add',
-                    onTap: () {
-                      log(selectedCategory!.id);
-                      log(selectedCategory!.name);
-                      final barcode = int.parse(_barcodeController.text);
-                      final price = double.parse(_priceController.text);
-                      final priceBefore =
-                          double.parse(_priceBeforeController.text);
-                      if (selectedCategory == null) {
-                        UIUtils.showMessage('Please select a category first');
-                        return;
-                      }
-                      _productCubit.addProduct(
-                        ProductModel(
-                          name: _productName.text,
-                          category: selectedCategory!,
-                          barcode: barcode,
-                          price: price,
-                          discount: priceBefore,
-                          id: '',
-                        ),
-                        _storeGetCubit.userStore!.id,
-                        selectedCategory!.id,
-                      );
-                    },
+                    child: CustomElevatedButton(
+                      label: 'Add',
+                      onTap: () {
+                        log(selectedCategory!.id);
+                        log(selectedCategory!.name);
+                        final barcode = int.parse(_barcodeController.text);
+                        final price = double.parse(_priceController.text);
+                        final priceBefore =
+                            double.parse(_priceBeforeController.text);
+                        if (selectedCategory == null) {
+                          UIUtils.showMessage('Please select a category first');
+                          return;
+                        }
+                        _productCubit.addProduct(
+                          ProductModel(
+                            name: _productName.text,
+                            category: selectedCategory!,
+                            barcode: barcode,
+                            price: price,
+                            discount: priceBefore,
+                            id: '',
+                          ),
+                          _storeGetCubit.userStore!.id,
+                          selectedCategory!.id,
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 16.h,
-              )
-            ],
+                SizedBox(
+                  height: 16.h,
+                )
+              ],
+            ),
           ),
         ),
       ),
